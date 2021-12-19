@@ -34,7 +34,8 @@
 - Natural 5 cards with 2 Pair
 - Natural 5 cards with 3 of a Kind
 - Natural 6 cards with Pair
-- Two Natural 2 Card plus Joker -> 5 Card Straight
+- Two Natural Two Card plus Joker -> 5 Card Straight
+- Three Natural Two Card plus Joker -> 2 Separate 5 Card Straight
 - Natural 3 Card plus Joker -> 5 Card Straight
 - Natural 3 Card plus Joker -> 6 Card Straight
 - Natural 3 Card plus Joker -> 7 Card Straight
@@ -42,7 +43,6 @@
 - Natural 4 Card plus Joker -> 5 Card Straight
 - Natural 4 Card plus Joker -> 6 Card Straight
 - Natural 4 Card plus Joker -> 7 Card Straight
-- Natural 4 Card plus Joker -> 2 Separate 5 Card Straight
 - Natural 5 Card plus Joker -> 6 Card Straight
 - Natural 5 Card plus Joker -> 7 Card Straight
 - Natural 6 Card plus Joker -> 7 Card Straight
@@ -54,6 +54,8 @@
 - Natural Broadway
 - Natural Broadway plus Joker
 - K, Q, J, 10 plus Joker
+- Straight with 5 Card Flush
+- Straight with 6 Card Flush
 
 *Flush*
 - Natural 5 Card Flush
