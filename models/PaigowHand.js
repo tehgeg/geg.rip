@@ -24,6 +24,14 @@ PaigowHand.prototype = {
     })
   },
   identifyHand: function () {
+    const isRepeatDup = (straight, dups) => {
+      return dups.some((dup) => {
+        if (dup.length !== straight.length) { return false }
+        return dup.every((card, idx) => {
+          return card.value === straight[idx].value && card.suit === straight[idx].suit
+        })
+      })
+    }
     this.sortHand()
 
     let prevCard = new Card('', 0)
@@ -77,7 +85,10 @@ PaigowHand.prototype = {
               s.push(card)
             }
           } else if (prevCard.numericValue() === card.numericValue() && s.length > 1) {
-            dupStraights.push([...s.slice(0, -1), card])
+            const dup = [...s.slice(0, -1), card]
+            if (!isRepeatDup(dup, dupStraights)) {
+              dupStraights.push(dup)
+            }
           }
         })
         straights.push(newStraight)
@@ -143,9 +154,8 @@ PaigowHand.prototype = {
         flush.unshift(this.hand[0])
       }
 
-      let highVal = (this.hand[1].numericValue() + 1) > 14 ? 14 : (this.hand[1].numericValue() + 1)
       let lowVal = (this.hand[6].numericValue() - 1) < 2 ? 2 : (this.hand[6].numericValue() - 1)
-      for (let jokerValue = lowVal; jokerValue <= highVal; jokerValue++) {
+      for (let jokerValue = lowVal; jokerValue <= 14; jokerValue++) {
         this.sortHandWithJoker(jokerValue)
 
         jokerStraights = []
