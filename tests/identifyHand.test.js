@@ -823,7 +823,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Two Natural Two Card plus Joker', () => {
+  test('Two Natural Two Card + Joker', () => {
     const hand = new PaigowHand([
       new Card('Spades', 2),
       new Card('Diamonds', 6),
@@ -848,7 +848,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Three Natural Two Card plus Joker', () => {
+  test('3 Natural Two Card + Joker', () => {
     const hand = new PaigowHand([
       new Card('Diamonds', 6),
       new Card('Clubs', 7),
@@ -875,7 +875,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 3 Card plus Joker -> 5 Card Straight', () => {
+  test('Natural 3 Card + Joker -> 5 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 6),
@@ -900,7 +900,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 3 Card plus Joker -> 6 Card Straight', () => {
+  test('Natural 3 Card + Joker -> 6 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 6),
@@ -927,7 +927,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Two Natural 3 Card plus Joker -> 7 Card Straight', () => {
+  test('Two Natural 3 Card + Joker -> 7 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -956,7 +956,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Two Natural 3 Card plus Joker -> No Straight (Joker High Paigow)', () => {
+  test('Two Natural 3 Card + Joker -> No Straight (Joker High Paigow)', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -979,7 +979,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 4 Card plus Joker -> 5 Card Straight', () => {
+  test('Natural 4 Card + Joker -> 5 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -1006,7 +1006,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 4 Card plus Joker -> 6 Card Straight', () => {
+  test('Natural 4 Card + Joker -> 6 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -1029,7 +1029,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 4 Card plus Joker -> 7 Card Straight', () => {
+  test('Natural 4 Card + Joker -> 7 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -1052,7 +1052,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 5 Card plus Joker -> 6 Card Straight', () => {
+  test('Natural 5 Card + Joker -> 6 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -1075,7 +1075,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 5 Card plus Joker -> 7 Card Straight', () => {
+  test('Natural 5 Card + Joker -> 7 Card Straight', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -1098,7 +1098,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 6 Card plus Joker', () => {
+  test('Natural 6 Card + Joker', () => {
     const hand = new PaigowHand([
       new Card('Spades', 3),
       new Card('Diamonds', 4),
@@ -1177,7 +1177,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Wheel with Pair of Aces plus Joker', () => {
+  test('Wheel with Pair of Aces + Joker', () => {
     const hand = new PaigowHand([
       new Card('Spades', 'Ace'),
       new Card('Diamonds', 'Ace'),
@@ -1229,7 +1229,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural 2-7 plus Joker', () => {
+  test('Natural 2-7 + Joker', () => {
     const hand = new PaigowHand([
       new Card('', 'Joker'),
       new Card('Diamonds', 2),
@@ -1277,7 +1277,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('Natural Broadway plus Joker', () => {
+  test('Natural Broadway + Joker', () => {
     const hand = new PaigowHand([
       new Card('Clubs', 3),
       new Card('', 'Joker'),
@@ -1300,7 +1300,7 @@ describe('Straight Tests', () => {
     expect(straightFlushes.length).toBe(0)
   })
 
-  test('K, Q, J, 10 plus Joker', () => {
+  test('K, Q, J, 10 + Joker', () => {
     const hand = new PaigowHand([
       new Card('Clubs', 3),
       new Card('', 'Joker'),
@@ -1374,6 +1374,964 @@ describe('Straight Tests', () => {
     expect(straights[0][4].value).toBe(3)
     expect(straights.every(s => s.length === 5)).toBe(true)
     expect(flush.length).toBe(6)
+    expect(straightFlushes.length).toBe(0)
+  })
+})
+
+describe('Flush Tests', () => {
+  test('Natural 5 Card Flush', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Spades', 6),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('Spades', 'King'),
+      new Card('Hearts', 7),
+      new Card('Clubs', 8)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 6 Card Flush', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Spades', 6),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('Spades', 'King'),
+      new Card('Spades', 7),
+      new Card('Clubs', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(6)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 7 Card Flush', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Spades', 6),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('Spades', 'King'),
+      new Card('Spades', 7),
+      new Card('Spades', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(7)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 4 Card Flush + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Spades', 6),
+      new Card('Spades', 8),
+      new Card('Spades', 'King'),
+      new Card('', 'Joker'),
+      new Card('Hearts', 7),
+      new Card('Diamonds', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 5 Card Flush + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Spades', 6),
+      new Card('Spades', 8),
+      new Card('Spades', 'King'),
+      new Card('', 'Joker'),
+      new Card('Spades', 7),
+      new Card('Diamonds', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(6)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 6 Card Flush + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Spades', 6),
+      new Card('Spades', 8),
+      new Card('Spades', 'King'),
+      new Card('', 'Joker'),
+      new Card('Spades', 7),
+      new Card('Spades', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(7)
+    expect(straightFlushes.length).toBe(0)
+  })
+})
+
+describe('Full House Tests', () => {
+  test('Natural Full House', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 8),
+      new Card('Spades', 8),
+      new Card('Clubs', 8),
+      new Card('Spades', 7),
+      new Card('Diamonds', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural Full House with additional Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 8),
+      new Card('Spades', 8),
+      new Card('Clubs', 8),
+      new Card('Spades', 7),
+      new Card('Diamonds', 7)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(2)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural Full House with additional Pair of Ace + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 8),
+      new Card('Spades', 8),
+      new Card('Clubs', 8),
+      new Card('Spades', 'Ace'),
+      new Card('', 'Joker')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(2)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 3 of a Kind with Pair of Ace + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Diamonds', 8),
+      new Card('Spades', 8),
+      new Card('Clubs', 8),
+      new Card('Spades', 'King'),
+      new Card('Clubs', 2)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Pair of Aces + Joker with Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Diamonds', 'Ace'),
+      new Card('Spades', 8),
+      new Card('Clubs', 8),
+      new Card('Spades', 'King'),
+      new Card('Clubs', 2)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Pair of Aces + Joker with Two Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Diamonds', 'Ace'),
+      new Card('Spades', 8),
+      new Card('Clubs', 8),
+      new Card('Spades', 2),
+      new Card('Clubs', 2)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(2)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+})
+
+describe('4 of a Kind Tests', () => {
+  test('Natural 4 of a Kind', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 3),
+      new Card('Clubs', 3),
+      new Card('Clubs', 8),
+      new Card('Spades', 7),
+      new Card('Diamonds', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 4 of a Kind + Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 3),
+      new Card('Clubs', 3),
+      new Card('Clubs', 8),
+      new Card('Spades', 8),
+      new Card('Diamonds', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 4 of a Kind with Ace + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 3),
+      new Card('Clubs', 3),
+      new Card('Clubs', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Diamonds', 8)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 4 of a Kind with 3 of a Kind', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 3),
+      new Card('Clubs', 3),
+      new Card('Clubs', 8),
+      new Card('Spades', 8),
+      new Card('Diamonds', 8)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('Natural 4 of a Kind with 3 of Kind being 2 Aces + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Hearts', 3),
+      new Card('Diamonds', 3),
+      new Card('Clubs', 3),
+      new Card('Clubs', 'Ace'),
+      new Card('Spades', 'Ace'),
+      new Card('', 'Joker')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('3 Aces + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('Hearts', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Clubs', 'Queen'),
+      new Card('Spades', 'King'),
+      new Card('Hearts', 4)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('3 Aces + Joker with Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('Hearts', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Clubs', 'Queen'),
+      new Card('Spades', 'Queen'),
+      new Card('Hearts', 4)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('3 Aces + Joker with 3 of a Kind', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('Hearts', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Clubs', 'Queen'),
+      new Card('Spades', 'Queen'),
+      new Card('Hearts', 'Queen')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('3 Aces + Joker with Broadway Cards', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('Hearts', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Clubs', 'Queen'),
+      new Card('Spades', 'King'),
+      new Card('Hearts', 'Jack')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(3)
+    expect(straights[0][0].value).toBe('Ace')
+    expect(straights[0][4].value).toBe('Joker')
+    expect(straights[1][0].value).toBe('Ace')
+    expect(straights[1][4].value).toBe('Joker')
+    expect(straights[2][0].value).toBe('Ace')
+    expect(straights[2][4].value).toBe('Joker')
+    expect(straights.every(s => s.length === 5)).toBe(true)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('3 Aces + Joker with Wheel Cards', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('Hearts', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Clubs', 2),
+      new Card('Spades', 3),
+      new Card('Hearts', 4)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(3)
+    expect(straights[0][0].value).toBe('Joker')
+    expect(straights[0][4].value).toBe('Ace')
+    expect(straights[1][0].value).toBe('Joker')
+    expect(straights[1][4].value).toBe('Ace')
+    expect(straights[2][0].value).toBe('Joker')
+    expect(straights[2][4].value).toBe('Ace')
+    expect(straights.every(s => s.length === 5)).toBe(true)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('3 Aces + Joker with Flush', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 'Ace'),
+      new Card('Hearts', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('', 'Joker'),
+      new Card('Diamonds', 2),
+      new Card('Diamonds', 7),
+      new Card('Diamonds', 10)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(1)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(0)
+  })
+})
+
+describe('Straight Flush Tests', () => {
+  test('Natural 5 Card Straight Flush', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 3),
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Hearts', 10),
+      new Card('Diamonds', 'Jack')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(1)
+    expect(straightFlushes[0][0].value).toBe(7)
+    expect(straightFlushes[0][4].value).toBe(3)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 5 Card Straight Flush with Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Hearts', 10),
+      new Card('Diamonds', 10)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(1)
+    expect(straightFlushes[0][0].value).toBe(8)
+    expect(straightFlushes[0][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 5 Card Straight Flush with Two Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Hearts', 7),
+      new Card('Diamonds', 8)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(2)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(3)
+    expect(straights[0][0].value).toBe(8)
+    expect(straights[0][4].value).toBe(4)
+    expect(straights[1][0].value).toBe(8)
+    expect(straights[1][4].value).toBe(4)
+    expect(straights[2][0].value).toBe(8)
+    expect(straights[2][4].value).toBe(4)
+    expect(straights.every(s => s.length === 5)).toBe(true)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(1)
+    expect(straightFlushes[0][0].value).toBe(8)
+    expect(straightFlushes[0][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 5 Card Straight Flush with 3 of a Kind', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Hearts', 8),
+      new Card('Diamonds', 8)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(2)
+    expect(straights[0][0].value).toBe(8)
+    expect(straights[0][4].value).toBe(4)
+    expect(straights[1][0].value).toBe(8)
+    expect(straights[1][4].value).toBe(4)
+    expect(straights.every(s => s.length === 5)).toBe(true)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(1)
+    expect(straightFlushes[0][0].value).toBe(8)
+    expect(straightFlushes[0][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 6 Card Straight Flush', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('Diamonds', 'King')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(6)
+    expect(straightFlushes.length).toBe(2)
+    expect(straightFlushes[0][0].value).toBe(9)
+    expect(straightFlushes[0][4].value).toBe(5)
+    expect(straightFlushes[1][0].value).toBe(8)
+    expect(straightFlushes[1][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 6 Card Straight Flush with Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('Diamonds', 4)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(1)
+    expect(straights[0][0].value).toBe(8)
+    expect(straights[0][4].value).toBe(4)
+    expect(straights.every(s => s.length === 5)).toBe(true)
+    expect(flush.length).toBe(6)
+    expect(straightFlushes.length).toBe(2)
+    expect(straightFlushes[0][0].value).toBe(9)
+    expect(straightFlushes[0][4].value).toBe(5)
+    expect(straightFlushes[1][0].value).toBe(8)
+    expect(straightFlushes[1][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 7 Card Straight Flush', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('Spades', 10)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(7)
+    expect(straightFlushes.length).toBe(3)
+    expect(straightFlushes[0][0].value).toBe(10)
+    expect(straightFlushes[0][4].value).toBe(6)
+    expect(straightFlushes[1][0].value).toBe(9)
+    expect(straightFlushes[1][4].value).toBe(5)
+    expect(straightFlushes[2][0].value).toBe(8)
+    expect(straightFlushes[2][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 5 Card Straight Flush + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Hearts', 'King'),
+      new Card('', 'Joker')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(6)
+    expect(straightFlushes.length).toBe(8)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 6 Card Straight Flush + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('', 'Joker')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(7)
+    expect(straightFlushes.length).toBe(14)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Natural 4 Card Straight Flush + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Clubs', 'Jack'),
+      new Card('Diamonds', 'Queen'),
+      new Card('', 'Joker')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(2)
+    expect(straightFlushes[0][0].value).toBe('Joker')
+    expect(straightFlushes[0][4].value).toBe(4)
+    expect(straightFlushes[1][0].value).toBe(7)
+    expect(straightFlushes[1][4].value).toBe('Joker')
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Two Natural 3 Card Straight Flushes + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 8),
+      new Card('Spades', 9),
+      new Card('Spades', 10),
+      new Card('', 'Joker')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(7)
+    expect(straightFlushes.length).toBe(3)
+    expect(straightFlushes[0][0].value).toBe(10)
+    expect(straightFlushes[0][4].value).toBe(6)
+    expect(straightFlushes[1][0].value).toBe(9)
+    expect(straightFlushes[1][4].value).toBe(5)
+    expect(straightFlushes[2][0].value).toBe(8)
+    expect(straightFlushes[2][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('5 Card Straight Flush with Regular 5 Card Straights', () => {
+    const hand = new PaigowHand([
+      new Card('Spades', 4),
+      new Card('Spades', 5),
+      new Card('Spades', 6),
+      new Card('Spades', 7),
+      new Card('Spades', 8),
+      new Card('Clubs', 8),
+      new Card('Hearts', 9)
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(3)
+    expect(straights[0][0].value).toBe(9)
+    expect(straights[0][4].value).toBe(5)
+    expect(straights[1][0].value).toBe(9)
+    expect(straights[1][4].value).toBe(5)
+    expect(straights[2][0].value).toBe(8)
+    expect(straights[2][4].value).toBe(4)
+    expect(straights.every(s => s.length === 5)).toBe(true)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(1)
+    expect(straightFlushes[0][0].value).toBe(8)
+    expect(straightFlushes[0][4].value).toBe(4)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+
+  test('Royal Flush with Pair of Aces (God Hand A)', () => {
+    const hand = new PaigowHand([
+      new Card('Diamonds', 10),
+      new Card('Diamonds', 'Jack'),
+      new Card('Diamonds', 'Queen'),
+      new Card('Diamonds', 'King'),
+      new Card('Diamonds', 'Ace'),
+      new Card('Clubs', 'Ace'),
+      new Card('Hearts', 'Ace')
+    ])
+
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(1)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(false)
+    expect(straights.length).toBe(2)
+    expect(straights[0][0].value).toBe('Ace')
+    expect(straights[0][4].value).toBe(10)
+    expect(straights[1][0].value).toBe('Ace')
+    expect(straights[1][4].value).toBe(10)
+    expect(straights.every(s => s.length === 5)).toBe(true)
+    expect(flush.length).toBe(5)
+    expect(straightFlushes.length).toBe(1)
+    expect(straightFlushes[0][0].value).toBe('Ace')
+    expect(straightFlushes[0][4].value).toBe(10)
+    expect(straightFlushes.every(s => s.length === 5)).toBe(true)
+  })
+})
+
+describe('5 Aces Tests', () => {
+  test('4 Aces + Joker', () => {
+    const hand = new PaigowHand([
+      new Card('Diamonds', 10),
+      new Card('Diamonds', 'Jack'),
+      new Card('', 'Joker'),
+      new Card('Spades', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('Clubs', 'Ace'),
+      new Card('Hearts', 'Ace')
+    ])
+  
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(0)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(true)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('4 Aces + Joker with Pair', () => {
+    const hand = new PaigowHand([
+      new Card('Hearts', 'Jack'),
+      new Card('Diamonds', 'Jack'),
+      new Card('', 'Joker'),
+      new Card('Spades', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('Clubs', 'Ace'),
+      new Card('Hearts', 'Ace')
+    ])
+  
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(true)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
+    expect(straightFlushes.length).toBe(0)
+  })
+
+  test('4 Aces + Joker with KK (God Hand B)', () => {
+    const hand = new PaigowHand([
+      new Card('Diamonds', 'King'),
+      new Card('Spades', 'King'),
+      new Card('', 'Joker'),
+      new Card('Spades', 'Ace'),
+      new Card('Diamonds', 'Ace'),
+      new Card('Clubs', 'Ace'),
+      new Card('Hearts', 'Ace')
+    ])
+  
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = hand.identifyHand()
+    expect(paigow).toBe('')
+    expect(pairs.length).toBe(1)
+    expect(trips.length).toBe(0)
+    expect(quads.length).toBe(0)
+    expect(fiveAces).toBe(true)
+    expect(straights.length).toBe(0)
+    expect(flush.length).toBe(0)
     expect(straightFlushes.length).toBe(0)
   })
 })

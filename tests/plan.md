@@ -84,6 +84,7 @@
 - Three aces plus Joker with Natural 3 of a Kind
 - Three aces plus Joker with Straight (Broadway)
 - Three aces plus Joker with Straight (Wheel)
+- Three aces pus Joker with Flush
 
 *Straight Flush*
 - Natural 5 Card Straight Flush
@@ -95,10 +96,12 @@
 - Natural 7 Card Straight Flush
 - 5 Card Straight Flush with Joker
 - 6 Card Straight Flush with Joker
-- 7 Card Straight Flush with Joker
-- Royal Flush with AA (God Hand B)
+- Natural 4 Card Straight Flush with Joker
+- Two separate 3 Card Straight Flushes with Joker (7 Card Straight Flush)
+- Straight Flush with Regular Straights
+- Royal Flush with AA (God Hand A)
 
 *5 Aces*
 - 4 Aces plus Joker
 - 4 Aces plus Joker with One Pair
-- 4 Aces plus Joker with KK (God Hand A)
+- 4 Aces plus Joker with KK (God Hand B)
