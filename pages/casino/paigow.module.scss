@@ -1,0 +1,19 @@
+.container {
+    padding: 2em;
+    background: url('/felt.png');
+    background-color: #1b71db;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+}
+
+.hand_container {
+    display: flex;
+    gap: 2em;
+    align-items: center;
+}
+
+.hand_index, .arrow {
+    font-size: 2em;
+}
