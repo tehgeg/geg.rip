@@ -428,11 +428,21 @@ PaigowHand.prototype = {
             high = flush.filter(c => !Card.equals(c, low[0]) && !Card.equals(c, low[1]))
           }
         } else {
-          target = trips[0][0]
-          low = trips[0].slice(1)
-          high = straights.find(s => (
-            s.some(c => Card.equals(c, target))
-          ))
+          target = trips[0][2]
+          low = trips[0].slice(0, 2)
+          if (trips[0][0].isJoker()) {
+            high = straights.find(s => (
+              s.every(c => !c.isJoker()) && s.some(c => Card.equals(c, target))
+            ))
+            if (!high) {
+              high = straights.slice(-1)[0]
+              low = this.hand.filter(c => !high.find(sCard => Card.equals(sCard, c)))
+            }
+          } else {
+            high = straights.find(s => (
+              s.some(c => Card.equals(c, target))
+            ))
+          }
         }
         this.low = low
         this.high = high
