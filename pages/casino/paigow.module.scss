@@ -1,7 +1,6 @@
 .container {
     padding: 2em;
     background: url('/felt.png');
-    background-color: #1b71db;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,4 +15,8 @@
 
 .hand_index, .arrow {
     font-size: 2em;
+}
+
+.felt_selector {
+    align-self: flex-end;
 }
