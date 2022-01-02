@@ -411,22 +411,19 @@ PaigowHand.prototype = {
         let low = []
         let high = []
         let target = null
-        if (hasStraightFlush || hasFlush) {
-          const suit = flush[4].suit
-          if (this.hasJoker()) {
-            const inFlush = trips[0].filter(card => flush.find(flushCard => Card.equals(flushCard, card)))
-            target = inFlush[0]
+        if (hasStraightFlush) {
+          if (trips[0][0].isJoker()) {
+            high = straightFlushes.find(sf => !sf.find(sfCard => sfCard.isJoker()))
+            if (!high) {
+              high = straightFlushes.slice(-1)[0]
+            }
           } else {
-            target = trips[0].find(c => c.suit === suit)
+            high = straightFlushes[0]
           }
-          low = trips[0].filter(c => !Card.equals(c, target))
-          if (hasStraightFlush) {
-            high = straightFlushes.find(s => (
-              s.some(c => Card.equals(c, target))
-            ))
-          } else {
-            high = flush.filter(c => !Card.equals(c, low[0]) && !Card.equals(c, low[1]))
-          }
+          low = this.hand.filter(c => !high.find(sfCard => Card.equals(sfCard, c)))
+        } else if (hasFlush) {
+          high = flush.slice(-5)
+          low = this.hand.filter(c => !high.find(fCard => Card.equals(fCard, c)))
         } else {
           target = trips[0][2]
           low = trips[0].slice(0, 2)
