@@ -3,7 +3,11 @@ import Card from './Card'
 function PaigowHand(cards = []) {
   this.hand = cards
   this.low = []
+  this.lowValue= null
+  this.lowRank = null
   this.high = []
+  this.highValue = null
+  this.highRank = null
   this.aceHigh = false
 }
 
@@ -287,7 +291,11 @@ PaigowHand.prototype = {
         this.aceHigh = true
       }
       this.low = [this.hand[1], this.hand[2]]
+      this.lowValue = 0
+      this.lowRank = `${this.low[0].value}, ${this.low[1].value}`
       this.high = [this.hand[0], ...this.hand.slice(3)]
+      this.highValue = 0
+      this.highRank = `${this.high[0].value} High Paigow`
       return
     }
 
