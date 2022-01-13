@@ -311,7 +311,7 @@ PaigowHand.prototype = {
         } else if (quadValue > 6 && quadValue < 11) {
           if (freeCards[0].numericValue() > 12) {
             this.low = freeCards.slice(0, 2)
-            this.high = [...quads, ...freeCards.slice(2)]
+            this.high = [...quads[0], ...freeCards.slice(2)]
           } else {
             this.low = quads[0].slice(-2)
             this.high = [...quads[0].slice(0, 2), ...freeCards]
@@ -319,7 +319,7 @@ PaigowHand.prototype = {
         } else if (quadValue > 10 && quadValue < 14) {
           if (freeCards[0].numericValue() > 13) {
             this.low = freeCards.slice(0, 2)
-            this.high = [...quads, ...freeCards.slice(2)]
+            this.high = [...quads[0], ...freeCards.slice(2)]
           } else {
             this.low = quads[0].slice(-2)
             this.high = [...quads[0].slice(0, 2), ...freeCards]
