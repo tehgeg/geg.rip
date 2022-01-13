@@ -21,6 +21,9 @@ PaigowHand.prototype = {
   hasJoker: function () {
     return this.hand.some(c => c.isJoker())
   },
+  isSet: function () {
+    return this.low.length === 2 && this.high.length === 5
+  },
   sortHand: function () {
     this.hand.sort((a, b) => b.numericValue() - a.numericValue())
   },
