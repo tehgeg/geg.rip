@@ -17,6 +17,14 @@
     font-size: 2em;
 }
 
-.felt_selector {
-    align-self: flex-end;
+.selectors {
+  display: flex;
+  align-self: flex-end;
+  gap: 2.5em;
+
+  label {
+    display: block;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
 }

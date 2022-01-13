@@ -1,7 +1,7 @@
 import Card from './Card'
 import styles from './PaigowHand.module.scss'
 
-const PaigowHand = ({ hand, set = false }) => (
+const PaigowHand = ({ hand, deck, set = false }) => (
   (
     set ?
       (
@@ -9,13 +9,13 @@ const PaigowHand = ({ hand, set = false }) => (
           <>
             {
               hand.low.map((card, i) => (
-                <Card card={card} key={`$${card.value}_${card.suit}`} />
+                <Card card={card} deck={deck} key={`$${card.value}_${card.suit}`} />
               ))
             }
             <div className={styles.spacer} />
             {
               hand.high.map((card, i) => (
-                <Card card={card} key={`$${card.value}_${card.suit}`} />
+                <Card card={card} deck={deck} key={`$${card.value}_${card.suit}`} />
               ))
             }
           </>
@@ -27,7 +27,7 @@ const PaigowHand = ({ hand, set = false }) => (
           <>
             {
               hand.hand.map((card, i) => (
-                <Card card={card} key={`${card.value}_${card.suit}`} />
+                <Card card={card} deck={deck} key={`${card.value}_${card.suit}`} />
               ))
             }
           </>
