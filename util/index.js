@@ -6,7 +6,7 @@ const identifyStraightValue = (straight) => {
     firstValue = valueMap[straight[1].numericValue() + 1]
   }
   if (lastValue === 'Joker') {
-    lastValue = valueMap[straight[straight.length - 2] - 1]
+    lastValue = valueMap[straight[straight.length - 2].numericValue() - 1]
   }
 
   return [firstValue, lastValue]
