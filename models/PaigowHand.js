@@ -1,4 +1,5 @@
 import Card from './Card'
+import { identifyStraightValue } from '../util'
 
 function PaigowHand(cards = []) {
   this.hand = cards
@@ -57,7 +58,7 @@ PaigowHand.prototype = {
   },
   setLowValueAndRank: function () {
     if (!this.low.length) { return }
-    if (this.low[0].value === this.low[1].value) {
+    if (this.low[0].value === this.low[1].value || this.low[0].value === 'Joker' && this.low[1].value === 'Ace') {
       this.lowValue = 1
       this.lowRank = `Pair of ${this.low[1].value}s`
     } else {
@@ -317,14 +318,14 @@ PaigowHand.prototype = {
       this.setLowValueAndRank()
       if (pairOfKings) {
         this.highValue = 9
-        this.handRank = '5 Aces'
+        this.highRank = '5 Aces'
       } else if (pairs.length) {
         this.highValue = 6
         const boatPair = pairs[0][0].value
-        this.highRank = `Full House, Aces Full of ${boatPair}s`
+        this.highRank = `Full House, Aces full of ${boatPair}s`
       } else {
         this.highValue = 3
-        this.highRank = '3 of a Kind, Aces'
+        this.highRank = 'Set of Aces'
       }
       return
     }
@@ -335,12 +336,12 @@ PaigowHand.prototype = {
         this.low = trips[0].slice(0, 2)
         this.high = [...quads[0], trips[0][2]]
         this.highValue = 7
-        this.highRank = `4 of a Kind, ${quads[0][3].value}s`
+        this.highRank = `Quad ${quads[0][3].value}s`
       } else if (pairs.length) {
         this.low = pairs[0]
         this.high = [...quads[0], ...freeCards]
         this.highValue = 7
-        this.highRank = `4 of a Kind, ${quads[0][3].value}s`
+        this.highRank = `Quad ${quads[0][3].value}s`
       } else {
         const quadValue = quads[0][0].numericValue()
         if (quadValue < 7) {
@@ -353,7 +354,7 @@ PaigowHand.prototype = {
             this.low = freeCards.slice(0, 2)
             this.high = [...quads[0], ...freeCards.slice(2)]
             this.highValue = 7
-            this.highRank = `4 of a Kind, ${quads[0][3].value}s`
+            this.highRank = `Quad ${quads[0][3].value}s`
           } else {
             this.low = quads[0].slice(-2)
             this.high = [...quads[0].slice(0, 2), ...freeCards]
@@ -365,7 +366,7 @@ PaigowHand.prototype = {
             this.low = freeCards.slice(0, 2)
             this.high = [...quads[0], ...freeCards.slice(2)]
             this.highValue = 7
-            this.highRank = `4 of a Kind, ${quads[0][3].value}s`
+            this.highRank = `Quad ${quads[0][3].value}s`
           } else {
             this.low = quads[0].slice(-2)
             this.high = [...quads[0].slice(0, 2), ...freeCards]
@@ -390,23 +391,23 @@ PaigowHand.prototype = {
         this.low = trips[0].slice(0, 2)
         this.high = [...trips[1], ...availableCards]
         this.highValue = 3
-        this.highRank = `3 of a Kind, ${trips[1][2].value}s`
+        this.highRank = `Set of ${trips[1][2].value}s`
       } else if (pairs.length > 1) {
         this.low = pairs[0]
         this.high = [...trips[0], ...pairs[1]]
-        this.highRank = 6
-        this.highValue = `Full House, ${trips[0][2].value}s Full of ${pairs[1][1].value}s`
+        this.highValue = 6
+        this.highRank = `Full House, ${trips[0][2].value}s full of ${pairs[1][1].value}s`
       } else {
         if (pairs[0][0].value === 2 && freeCards[0].numericValue() > 13 && freeCards[1].numericValue() > 12) {
           this.low = freeCards
           this.high = [...trips[0], ...pairs[0]]
-          this.highRank = 6
-          this.highValue = `Full House, ${trips[0][2].value}s Full of ${pairs[1][1].value}s`
+          this.highValue = 6
+          this.highRank = `Full House, ${trips[0][2].value}s full of ${pairs[1][1].value}s`
         } else {
           this.low = pairs[0]
           this.high = [...trips[0], ...freeCards]
-          this.highRank = 3
-          this.highValue = `3 of a Kind, ${trips[0][2].value}s`
+          this.highValue = 3
+          this.highRank = `Set of ${trips[0][2].value}s`
         }
       }
       this.setLowValueAndRank()
@@ -417,8 +418,8 @@ PaigowHand.prototype = {
     if (pairs.length === 3) {
       this.low = pairs[0]
       this.high = [...pairs[1], ...pairs[2], ...freeCards]
-      this.highRank = 2
-      this.highValue = `2 Pair, ${pairs[1][1].value}s and ${pairs[2][1].value}s`
+      this.highValue = 2
+      this.highRank = `Two Pair, ${pairs[1][1].value}s and ${pairs[2][1].value}s`
       this.setLowValueAndRank()
       return
     }
@@ -437,8 +438,8 @@ PaigowHand.prototype = {
       if (pairs[0][0].numericValue() > 13) {
         this.low = pairs[1]
         this.high = [...pairs[0], ...freeCards]
-        this.highRank = 1
-        this.highValue = `Pair of ${pairs[0][1].value}s`
+        this.highValue = 1
+        this.highRank = `Pair of ${pairs[0][1].value}s`
       } else {
         const pair1Rank = pairRank(pairs[0][0].numericValue())
         const pair2Rank = pairRank(pairs[1][0].numericValue())
@@ -446,31 +447,31 @@ PaigowHand.prototype = {
         if (['HH', 'HM', 'MH'].includes(pairRanks)) {
           this.low = pairs[1]
           this.high = [...pairs[0], ...freeCards]
-          this.highRank = 1
-          this.highValue = `Pair of ${pairs[0][1].value}s`
+          this.highValue = 1
+          this.highRank = `Pair of ${pairs[0][1].value}s`
         } else if (['MM', 'HL', 'LH'].includes(pairRanks)) {
           if (freeCards[0].numericValue() > 13) {
             this.low = freeCards.slice(0, 2)
             this.high = [...pairs[0], ...pairs[1], ...freeCards.slice(-1)]
-            this.highRank = 2
-            this.highValue = `2 Pair, ${pairs[0][1].value}s and ${pairs[1][1].value}s`
+            this.highValue = 2
+            this.highRank = `Two Pair, ${pairs[0][1].value}s and ${pairs[1][1].value}s`
           } else {
             this.low = pairs[1]
             this.high = [...pairs[0], ...freeCards]
-            this.highRank = 1
-            this.highValue = `Pair of ${pairs[0][1].value}s`
+            this.highValue = 1
+            this.highRank = `Pair of ${pairs[0][1].value}s`
           }
         } else {
           if (freeCards[0].numericValue() > 12) {
             this.low = freeCards.slice(0, 2)
             this.high = [...pairs[0], ...pairs[1], ...freeCards.slice(-1)]
-            this.highRank = 2
-            this.highValue = `2 Pair, ${pairs[0][1].value}s and ${pairs[1][1].value}s`
+            this.highValue = 2
+            this.highRank = `Two Pair, ${pairs[0][1].value}s and ${pairs[1][1].value}s`
           } else {
             this.low = pairs[1]
             this.high = [...pairs[0], ...freeCards]
-            this.highRank = 1
-            this.highValue = `Pair of ${pairs[0][1].value}s`
+            this.highValue = 1
+            this.highRank = `Pair of ${pairs[0][1].value}s`
           }
         }
       }
@@ -496,9 +497,15 @@ PaigowHand.prototype = {
           } else {
             high = straightFlushes[0]
           }
+          this.highValue = 8
+          const [first, last] = identifyStraightValue(high)
+          this.highRank = `Straight Flush, ${first} to ${last}`
+          if (this.highRank = 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
           low = this.hand.filter(c => !high.find(sfCard => Card.equals(sfCard, c)))
         } else if (hasFlush) {
           high = flush.slice(-5)
+          this.highValue = 5
+          this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} high`
           low = this.hand.filter(c => !high.find(fCard => Card.equals(fCard, c)))
         } else {
           target = trips[0][2]
@@ -516,6 +523,9 @@ PaigowHand.prototype = {
               s.some(c => Card.equals(c, target))
             ))
           }
+          this.highValue = 4
+          const [first, last] = identifyStraightValue(high)
+          this.highRank = `Straight, ${first} to ${last}`
         }
         this.low = low
         this.high = high
@@ -538,6 +548,10 @@ PaigowHand.prototype = {
             if (cleanSF) {
               low = pairs[0]
               high = cleanSF
+              this.highValue = 8
+              const [first, last] = identifyStraightValue(high)
+              this.highRank = `Straight Flush, ${first} to ${last}`
+              if (this.highRank = 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
               setWithPair = true
             }
           }
@@ -550,6 +564,8 @@ PaigowHand.prototype = {
             if (cleanF.length > 4) {
               low = pairs[0]
               high = cleanF
+              this.highValue = 5
+              this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} high`
               setWithPair = true
             }
           }
@@ -562,6 +578,9 @@ PaigowHand.prototype = {
             if (cleanS) {
               low = pairs[0]
               high = cleanS
+              this.highValue = 4
+              const [first, last] = identifyStraightValue(high)
+              this.highRank = `Straight, ${first} to ${last}`
               setWithPair = true
             }
           }
@@ -572,6 +591,10 @@ PaigowHand.prototype = {
           if (hasStraightFlush) {
             low = sfLow
             high = sfHigh
+            this.highValue = 8
+            const [first, last] = identifyStraightValue(high)
+            this.highRank = `Straight Flush, ${first} to ${last}`
+            if (this.highRank = 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
           }
           if (hasFlush) {
             if (!low.length
@@ -579,6 +602,8 @@ PaigowHand.prototype = {
               || (fLow[0].numericValue() === low[0].numericValue() && fLow[1].numericValue() > low[1].numericValue())) {
               low = fLow
               high = fHigh
+              this.highValue = 5
+              this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} high`
             }
           }
           if (hasStraight) {
@@ -587,6 +612,9 @@ PaigowHand.prototype = {
               || (sLow[0].numericValue() === low[0].numericValue() && sLow[1].numericValue() > low[1].numericValue())) {
               low = sLow
               high = sHigh
+              this.highValue = 4
+              const [first, last] = identifyStraightValue(high)
+              this.highRank = `Straight, ${first} to ${last}`
             }
           }
         }
@@ -603,19 +631,19 @@ PaigowHand.prototype = {
         const availableCards = PaigowHand.sortCards([...freeCards, trips[0][2]])
         this.low = trips[0].slice(0, 2)
         this.high = [...trips[1], ...availableCards]
-        this.highRank = 3
-        this.highValue = `3 of a Kind, ${trips[1][2].value}s`
+        this.highValue = 3
+        this.highRank = `Set of ${trips[1][2].value}s`
       } else {
         if (trips[0][0].numericValue() > 13) {
           this.low = [trips[0][0], freeCards[0]]
           this.high = [...trips[0].slice(1), ...freeCards.slice(1)]
-          this.highRank = 1
-          this.highValue = `Pair of ${trips[0][2].value}s`
+          this.highValue = 1
+          this.highRank = `Pair of ${trips[0][2].value}s`
         } else {
           this.low = freeCards.slice(0, 2)
           this.high = [...trips[0], ...freeCards.slice(2)]
-          this.highRank = 3
-          this.highValue = `3 of a Kind, ${trips[0][2].value}s`
+          this.highValue = 3
+          this.highRank = `Set of ${trips[0][2].value}s`
         }
       }
       this.setLowValueAndRank()
@@ -627,8 +655,8 @@ PaigowHand.prototype = {
       this.low = freeCards.slice(0, 2)
       this.high = [...pairs[0], ...freeCards.slice(2)]
       this.setLowValueAndRank()
-      this.highRank = 1
-      this.highValue = `Pair of ${pairs[0][1].value}s`
+      this.highValue = 1
+      this.highRank = `Pair of ${pairs[0][1].value}s`
       return
     }
   },

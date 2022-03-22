@@ -10,3 +10,15 @@
 .arrow {
     font-size: 2em;
 }
+
+.handFull {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25em;
+}
+
+.handCards {
+    display: flex;
+    gap: 0.5em;
+}
