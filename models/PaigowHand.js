@@ -505,7 +505,7 @@ PaigowHand.prototype = {
         } else if (hasFlush) {
           high = flush.slice(-5)
           this.highValue = 5
-          this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} high`
+          this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} High`
           low = this.hand.filter(c => !high.find(fCard => Card.equals(fCard, c)))
         } else {
           target = trips[0][2]
@@ -565,7 +565,7 @@ PaigowHand.prototype = {
               low = pairs[0]
               high = cleanF
               this.highValue = 5
-              this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} high`
+              this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} High`
               setWithPair = true
             }
           }
@@ -603,7 +603,7 @@ PaigowHand.prototype = {
               low = fLow
               high = fHigh
               this.highValue = 5
-              this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} high`
+              this.highRank = `Flush, ${high[0].isJoker() ? 'Ace' : high[0].value} High`
             }
           }
           if (hasStraight) {
