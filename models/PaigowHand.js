@@ -556,6 +556,11 @@ PaigowHand.prototype = {
             }
           }
           sfHigh = straightFlushes.slice(-1)[0]
+          if (sfHigh[4].isJoker() && sfHigh[0].value !== 'Ace') {
+            sfHigh = [sfHigh[4], ...sfHigh.slice(0, 4)]
+          } else if (sfHigh[0].isJoker() && sfHigh[4].value === 2) {
+            sfHigh = [...sfHigh.slice(1), sfHigh[0]]
+          }
           sfLow = this.hand.filter(c => !sfHigh.find(sfCard => Card.equals(sfCard, c)))
         }
         if (hasFlush && !setWithPair) {
@@ -585,6 +590,11 @@ PaigowHand.prototype = {
             }
           }
           sHigh = straights.slice(-1)[0]
+          if (sHigh[4].isJoker() && sHigh[0].value !== 'Ace') {
+            sHigh = [sHigh[4], ...sHigh.slice(0, 4)]
+          } else if (sHigh[0].isJoker() && sHigh[4].value === 2) {
+            sHigh = [...sHigh.slice(1), sHigh[0]]
+          }
           sLow = this.hand.filter(c => !sHigh.find(sCard => Card.equals(sCard, c)))
         }
         if (!setWithPair) {
