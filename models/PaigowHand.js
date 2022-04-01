@@ -16,6 +16,270 @@ PaigowHand.sortCards = (cards) => (
   cards.sort((a, b) => b.numericValue() - a.numericValue())
 )
 
+PaigowHand.sortCardsWithJoker = (j, cards) => {
+  cards.sort((a, b) => {
+    let aVal = a.isJoker() ? (j + 0.5) : a.numericValue()
+    let bVal = b.isJoker() ? (j + 0.5) : b.numericValue()
+    return bVal - aVal
+  })
+}
+
+PaigowHand.identifyHand = (hand) => {
+  const isRepeatDup = (straight, dups) => {
+    return dups.some((dup) => {
+      if (dup.length !== straight.length) { return false }
+      return dup.every((card, idx) => {
+        return card.value === straight[idx].value && card.suit === straight[idx].suit
+      })
+    })
+  }
+
+  PaigowHand.sortCards(hand)
+
+  let prevCard = new Card('', 0)
+  let paigow = ''
+  const pairs = []
+  const trips = []
+  let quads = []
+  const hasJoker = hand.some(c => c.isJoker())
+  let fiveAces = false
+  let currentMatchCount = 1
+  let straights = []
+  let jokerStraights = []
+  let jokerWheels = []
+  const flushCount = { Clubs: 0, Diamonds: 0, Hearts: 0, Spades: 0 }
+  let flush = []
+  let straightFlushes = []
+
+  hand.forEach((card, index, arr) => {
+    if (!card.isJoker()) {
+      flushCount[card.suit] += 1
+
+      if (prevCard.value === card.value) {
+        currentMatchCount++
+        if (index === arr.length - 1) {
+          if (currentMatchCount === 4) {
+            quads.push(arr.slice(index - 3))
+          } else if (currentMatchCount === 3) {
+            trips.push(arr.slice(index - 2))
+          } else if (currentMatchCount === 2) {
+            pairs.push(arr.slice(index - 1))
+          }
+        }
+      }
+      if (prevCard.value !== card.value) {
+        if (currentMatchCount === 4) {
+          quads.push(arr.slice(index - 4, index))
+        } else if (currentMatchCount === 3) {
+          trips.push(arr.slice(index - 3, index))
+        } else if (currentMatchCount === 2) {
+          pairs.push(arr.slice(index - 2, index))
+        }
+        currentMatchCount = 1
+      }
+
+      let newStraight = [card]
+      let dupStraights = []
+      straights.forEach((s) => {
+        let prevCard = s[s.length - 1]
+        if (prevCard.numericValue() === card.numericValue() + 1) {
+          if (s.length < 5) {
+            s.push(card)
+          }
+        } else if (prevCard.numericValue() === card.numericValue() && s.length > 1) {
+          const dup = [...s.slice(0, -1), card]
+          if (!isRepeatDup(dup, dupStraights)) {
+            dupStraights.push(dup)
+          }
+        }
+      })
+      straights.push(newStraight)
+      if (dupStraights.length) {
+        straights.push(...dupStraights)
+      }
+
+      prevCard = card
+    }
+  })
+
+  if (flushCount.Clubs > 3) {
+    flush = hand.filter((card) => card.suit === 'Clubs')
+  } else if (flushCount.Diamonds > 3) {
+    flush = hand.filter((card) => card.suit === 'Diamonds')
+  } else if (flushCount.Hearts > 3) {
+    flush = hand.filter((card) => card.suit === 'Hearts')
+  } else if (flushCount.Spades > 3) {
+    flush = hand.filter((card) => card.suit === 'Spades')
+  }
+
+  const wheels = []
+  straights.forEach((s) => {
+    if (s.length === 4 && s[3].numericValue() === 2) {
+      const aceIndices = hand.reduce((list, card, idx) => (
+        card.numericValue() === 14 ? [...list, idx] : list
+      ), [])
+      aceIndices.forEach((aceIdx) => {
+        wheels.push([...s, hand[aceIdx]])
+      })
+    }
+  })
+  straights = straights.filter((s) => (
+    s.length > 4
+  )).concat(wheels)
+
+  let quadAcesJoker = false;
+  let tripAcesJoker = false;
+  if (hasJoker) {
+    const joker = hand[0]
+    if (quads.length && quads[0][0].value === 'Ace') {
+      quads = []
+      fiveAces = true
+    }
+    if (trips.length && trips[0][0].value === 'Ace') {
+      const [tripAces] = trips.splice(0, 1)
+      quads.push([joker, ...tripAces])
+      quadAcesJoker = true
+    }
+    if (pairs.length && pairs[0][0].value === 'Ace') {
+      const [pairAces] = pairs.splice(0, 1)
+      trips.unshift([joker, ...pairAces])
+      tripAcesJoker = true
+    }
+    if (!fiveAces && !quadAcesJoker && !tripAcesJoker) {
+      const aceIndex = hand.findIndex((c) => c.value === 'Ace')
+      if (aceIndex > -1) {
+        pairs.unshift([joker, hand[aceIndex]])
+      }
+    }
+
+    if (flush.length) {
+      flush.unshift(hand[0])
+    }
+
+    let lowVal = (hand[hand.length - 1].numericValue() - 1) < 2 ? 2 : (hand[hand.length - 1].numericValue() - 1)
+    for (let jokerValue = lowVal; jokerValue <= 14; jokerValue++) {
+      PaigowHand.sortCardsWithJoker(jokerValue, hand)
+
+      jokerStraights = []
+      hand.forEach((card) => {
+        let newStraight = [card]
+        let dupStraights = []
+        jokerStraights.forEach((s) => {
+          let cardValue = card.isJoker() ? jokerValue : card.numericValue()
+          let prevCard = s[s.length - 1]
+          let prevCardValue = prevCard.isJoker() ? jokerValue : prevCard.numericValue()
+          if (prevCardValue === cardValue + 1) {
+            if (s.length < 5) {
+              s.push(card)
+            }
+          } else if (prevCardValue === cardValue && s.length > 1) {
+            dupStraights.push([...s.slice(0, -1), card])
+          }
+        })
+        jokerStraights.push(newStraight)
+        if (dupStraights.length) {
+          jokerStraights.push(...dupStraights)
+        }
+      })
+
+      jokerWheels = []
+
+      if (jokerValue === 14) {
+        jokerStraights.forEach((s) => {
+          if (s.length === 4 && s[3].numericValue() === 2) {
+            jokerWheels.push([...s, hand.find((c) => c.isJoker())])
+          }
+        })
+      } else {
+        jokerStraights.forEach((s) => {
+          if (s.length === 4 && s.some((c) => c.isJoker()) && (s[3].numericValue() === 2 || (s[3].isJoker() && jokerValue === 2))) {
+            const aceIndices = hand.reduce((list, card, idx) => (
+              card.numericValue() === 14 ? [...list, idx] : list
+            ), [])
+            aceIndices.forEach((aceIdx) => {
+              jokerWheels.push([...s, hand[aceIdx]])
+            })
+          }
+        })
+      }
+
+      jokerStraights = jokerStraights.filter((s) => (
+        s.length > 4 && s.some((c) => c.isJoker())
+      )).concat(jokerWheels)
+      straights = [...straights, ...jokerStraights]
+    }
+    PaigowHand.sortCards(hand)
+  } else {
+    if (flush.length < 5) {
+      flush = []
+    }
+  }
+
+  straights.sort((a, b) => {
+    let aRank = a[4].numericValue()
+    let bRank = b[4].numericValue()
+
+    if (aRank === 15) {
+      aRank = a[3].numericValue() === 2 ? 9.5 : a[3].numericValue() - 1
+    }
+    if (bRank === 15) {
+      bRank = b[3].numericValue() === 2 ? 9.5 : b[3].numericValue() - 1
+    }
+
+    return bRank - aRank
+  })
+
+  const sFlushIndices = []
+  straights.forEach((s, idx) => {
+    const suit = s[0].isJoker() ? s[1].suit : s[0].suit
+    const sFlush = s.every((c) => c.isJoker() || c.suit === suit)
+    if (sFlush) {
+      sFlushIndices.unshift(idx)
+    }
+  })
+  sFlushIndices.forEach((idx) => {
+    straightFlushes.unshift(...straights.splice(idx, 1))
+  })
+
+  if (!pairs.length && !trips.length && !quads.length && !fiveAces && !straights.length && !flush.length && !straightFlushes.length) {
+    paigow = hand[0].value
+  }
+
+  return {
+    paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes,
+  }
+}
+
+// PaigowHand.isFoulHand = (low = [], high = []) => {
+//   if (low.length !== 2 || high.length !== 5) {
+//     return true
+//   }
+// }
+
+PaigowHand.lowValueAndRank = (lowHand) => {
+  const result = { lowValue: null, lowRank: '' }
+  if (!lowHand.length) { return result }
+  if (lowHand[0].value === lowHand[1].value || lowHand[0].value === 'Joker' && lowHand[1].value === 'Ace') {
+    result.lowValue = 1
+    result.lowRank = `Pair of ${lowHand[1].value}s`
+  } else {
+    result.lowValue = 0
+    const firstValue = lowHand[0].isJoker() ? 'Ace' : lowHand[0].value
+    result.lowRank = `${firstValue}, ${lowHand[1].value}`
+  }
+
+  return result
+}
+
+PaigowHand.highValueAndRank = (highHand) => {
+  const result = { highValue: null, highRank: '' }
+  if (!highHand.length) { return result }
+  const {
+    paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes
+  } = PaigowHand.identifyHand(highHand)
+  // paigow, fiveAces, straightFlush, quads, boat, flush, straight, set, 2 pair, pair
+}
+
 PaigowHand.prototype = {
   checkAceHigh: function () {
 
@@ -49,252 +313,9 @@ PaigowHand.prototype = {
       return list
     }, [])
   },
-  sortHandWithJoker: function (j) {
-    this.hand.sort((a, b) => {
-      let aVal = a.isJoker() ? (j + 0.5) : a.numericValue()
-      let bVal = b.isJoker() ? (j + 0.5) : b.numericValue()
-      return bVal - aVal
-    })
-  },
-  setLowValueAndRank: function () {
-    if (!this.low.length) { return }
-    if (this.low[0].value === this.low[1].value || this.low[0].value === 'Joker' && this.low[1].value === 'Ace') {
-      this.lowValue = 1
-      this.lowRank = `Pair of ${this.low[1].value}s`
-    } else {
-      this.lowValue = 0
-      const firstValue = this.low[0].isJoker() ? 'Ace' : this.low[0].value
-      this.lowRank = `${firstValue}, ${this.low[1].value}`
-    }
-  },
-  identifyHand: function () {
-    const isRepeatDup = (straight, dups) => {
-      return dups.some((dup) => {
-        if (dup.length !== straight.length) { return false }
-        return dup.every((card, idx) => {
-          return card.value === straight[idx].value && card.suit === straight[idx].suit
-        })
-      })
-    }
-
-    this.sortHand()
-
-    let prevCard = new Card('', 0)
-    let paigow = ''
-    const pairs = []
-    const trips = []
-    let quads = []
-    const hasJoker = this.hasJoker()
-    let fiveAces = false
-    let currentMatchCount = 1
-    let straights = []
-    let jokerStraights = []
-    let jokerWheels = []
-    const flushCount = { Clubs: 0, Diamonds: 0, Hearts: 0, Spades: 0 }
-    let flush = []
-    let straightFlushes = []
-
-    this.hand.forEach((card, index, arr) => {
-      if (!card.isJoker()) {
-        flushCount[card.suit] += 1
-
-        if (prevCard.value === card.value) {
-          currentMatchCount++
-          if (index === 6) {
-            if (currentMatchCount === 4) {
-              quads.push(arr.slice(index - 3))
-            } else if (currentMatchCount === 3) {
-              trips.push(arr.slice(index - 2))
-            } else if (currentMatchCount === 2) {
-              pairs.push(arr.slice(index - 1))
-            }
-          }
-        }
-        if (prevCard.value !== card.value) {
-          if (currentMatchCount === 4) {
-            quads.push(arr.slice(index - 4, index))
-          } else if (currentMatchCount === 3) {
-            trips.push(arr.slice(index - 3, index))
-          } else if (currentMatchCount === 2) {
-            pairs.push(arr.slice(index - 2, index))
-          }
-          currentMatchCount = 1
-        }
-
-        let newStraight = [card]
-        let dupStraights = []
-        straights.forEach((s) => {
-          let prevCard = s[s.length - 1]
-          if (prevCard.numericValue() === card.numericValue() + 1) {
-            if (s.length < 5) {
-              s.push(card)
-            }
-          } else if (prevCard.numericValue() === card.numericValue() && s.length > 1) {
-            const dup = [...s.slice(0, -1), card]
-            if (!isRepeatDup(dup, dupStraights)) {
-              dupStraights.push(dup)
-            }
-          }
-        })
-        straights.push(newStraight)
-        if (dupStraights.length) {
-          straights.push(...dupStraights)
-        }
-
-        prevCard = card
-      }
-    })
-
-    if (flushCount.Clubs > 3) {
-      flush = this.hand.filter((card) => card.suit === 'Clubs')
-    } else if (flushCount.Diamonds > 3) {
-      flush = this.hand.filter((card) => card.suit === 'Diamonds')
-    } else if (flushCount.Hearts > 3) {
-      flush = this.hand.filter((card) => card.suit === 'Hearts')
-    } else if (flushCount.Spades > 3) {
-      flush = this.hand.filter((card) => card.suit === 'Spades')
-    }
-
-    const wheels = []
-    straights.forEach((s) => {
-      if (s.length === 4 && s[3].numericValue() === 2) {
-        const aceIndices = this.hand.reduce((list, card, idx) => (
-          card.numericValue() === 14 ? [...list, idx] : list
-        ), [])
-        aceIndices.forEach((aceIdx) => {
-          wheels.push([...s, this.hand[aceIdx]])
-        })
-      }
-    })
-    straights = straights.filter((s) => (
-      s.length > 4
-    )).concat(wheels)
-
-    let quadAcesJoker = false;
-    let tripAcesJoker = false;
-    if (hasJoker) {
-      const joker = this.hand[0]
-      if (quads.length && quads[0][0].value === 'Ace') {
-        quads = []
-        fiveAces = true
-      }
-      if (trips.length && trips[0][0].value === 'Ace') {
-        const [tripAces] = trips.splice(0, 1)
-        quads.push([joker, ...tripAces])
-        quadAcesJoker = true
-      }
-      if (pairs.length && pairs[0][0].value === 'Ace') {
-        const [pairAces] = pairs.splice(0, 1)
-        trips.unshift([joker, ...pairAces])
-        tripAcesJoker = true
-      }
-      if (!fiveAces && !quadAcesJoker && !tripAcesJoker) {
-        const aceIndex = this.hand.findIndex((c) => c.value === 'Ace')
-        if (aceIndex > -1) {
-          pairs.unshift([joker, this.hand[aceIndex]])
-        }
-      }
-
-      if (flush.length) {
-        flush.unshift(this.hand[0])
-      }
-
-      let lowVal = (this.hand[6].numericValue() - 1) < 2 ? 2 : (this.hand[6].numericValue() - 1)
-      for (let jokerValue = lowVal; jokerValue <= 14; jokerValue++) {
-        this.sortHandWithJoker(jokerValue)
-
-        jokerStraights = []
-        this.hand.forEach((card) => {
-          let newStraight = [card]
-          let dupStraights = []
-          jokerStraights.forEach((s) => {
-            let cardValue = card.isJoker() ? jokerValue : card.numericValue()
-            let prevCard = s[s.length - 1]
-            let prevCardValue = prevCard.isJoker() ? jokerValue : prevCard.numericValue()
-            if (prevCardValue === cardValue + 1) {
-              if (s.length < 5) {
-                s.push(card)
-              }
-            } else if (prevCardValue === cardValue && s.length > 1) {
-              dupStraights.push([...s.slice(0, -1), card])
-            }
-          })
-          jokerStraights.push(newStraight)
-          if (dupStraights.length) {
-            jokerStraights.push(...dupStraights)
-          }
-        })
-
-        jokerWheels = []
-
-        if (jokerValue === 14) {
-          jokerStraights.forEach((s) => {
-            if (s.length === 4 && s[3].numericValue() === 2) {
-              jokerWheels.push([...s, this.hand.find((c) => c.isJoker())])
-            }
-          })
-        } else {
-          jokerStraights.forEach((s) => {
-            if (s.length === 4 && s.some((c) => c.isJoker()) && (s[3].numericValue() === 2 || (s[3].isJoker() && jokerValue === 2))) {
-              const aceIndices = this.hand.reduce((list, card, idx) => (
-                card.numericValue() === 14 ? [...list, idx] : list
-              ), [])
-              aceIndices.forEach((aceIdx) => {
-                jokerWheels.push([...s, this.hand[aceIdx]])
-              })
-            }
-          })
-        }
-
-        jokerStraights = jokerStraights.filter((s) => (
-          s.length > 4 && s.some((c) => c.isJoker())
-        )).concat(jokerWheels)
-        straights = [...straights, ...jokerStraights]
-      }
-      this.sortHand()
-    } else {
-      if (flush.length < 5) {
-        flush = []
-      }
-    }
-
-    straights.sort((a, b) => {
-      let aRank = a[4].numericValue()
-      let bRank = b[4].numericValue()
-
-      if (aRank === 15) {
-        aRank = a[3].numericValue() === 2 ? 9.5 : a[3].numericValue() - 1
-      }
-      if (bRank === 15) {
-        bRank = b[3].numericValue() === 2 ? 9.5 : b[3].numericValue() - 1
-      }
-
-      return bRank - aRank
-    })
-
-    const sFlushIndices = []
-    straights.forEach((s, idx) => {
-      const suit = s[0].isJoker() ? s[1].suit : s[0].suit
-      const sFlush = s.every((c) => c.isJoker() || c.suit === suit)
-      if (sFlush) {
-        sFlushIndices.unshift(idx)
-      }
-    })
-    sFlushIndices.forEach((idx) => {
-      straightFlushes.unshift(...straights.splice(idx, 1))
-    })
-
-    if (!pairs.length && !trips.length && !quads.length && !fiveAces && !straights.length && !flush.length && !straightFlushes.length) {
-      paigow = this.hand[0].value
-    }
-
-    return {
-      paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes,
-    }
-  },
   // ruleset -> https://wizardofodds.com/games/pai-gow-poker/house-way/trump-plaza-atlantic-city/
   setHouseWay: function () {
-    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = this.identifyHand()
+    const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = PaigowHand.identifyHand(this.hand)
     const freeCards = this.freeCards(quads, trips, pairs)
 
     // paigow
@@ -304,7 +325,9 @@ PaigowHand.prototype = {
       }
       this.low = [this.hand[1], this.hand[2]]
       this.high = [this.hand[0], ...this.hand.slice(3)]
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       this.highValue = 0
       this.highRank = `${this.high[0].isJoker() ? 'Ace' : this.high[0].value} High Paigow`
       return
@@ -315,7 +338,9 @@ PaigowHand.prototype = {
       const pairOfKings = pairs.length && pairs[0][0].value == 'King'
       this.low = pairOfKings ? this.hand.slice(-2) : this.hand.slice(0, 2)
       this.high = pairOfKings ? this.hand.slice(0, 5) : this.hand.slice(2)
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       if (pairOfKings) {
         this.highValue = 9
         this.highRank = '5 Aces'
@@ -380,7 +405,9 @@ PaigowHand.prototype = {
           this.highRank = `Pair of ${quads[0][1].value}s`
         }
       }
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       return
     }
 
@@ -410,7 +437,9 @@ PaigowHand.prototype = {
           this.highRank = `Set of ${trips[0][2].value}s`
         }
       }
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       return
     }
 
@@ -420,7 +449,9 @@ PaigowHand.prototype = {
       this.high = [...pairs[1], ...pairs[2], ...freeCards]
       this.highValue = 2
       this.highRank = `Two Pair, ${pairs[1][1].value}s and ${pairs[2][1].value}s`
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       return
     }
 
@@ -475,7 +506,9 @@ PaigowHand.prototype = {
           }
         }
       }
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       return
     }
 
@@ -633,7 +666,9 @@ PaigowHand.prototype = {
         this.low = low
         this.high = high
       }
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       return
     }
 
@@ -658,7 +693,9 @@ PaigowHand.prototype = {
           this.highRank = `Set of ${trips[0][2].value}s`
         }
       }
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       return
     }
 
@@ -666,7 +703,9 @@ PaigowHand.prototype = {
     if (pairs.length === 1) {
       this.low = freeCards.slice(0, 2)
       this.high = [...pairs[0], ...freeCards.slice(2)]
-      this.setLowValueAndRank()
+      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      this.lowValue = lowValue
+      this.lowRank = lowRank
       this.highValue = 1
       this.highRank = `Pair of ${pairs[0][1].value}s`
       return
