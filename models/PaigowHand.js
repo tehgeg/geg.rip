@@ -589,7 +589,9 @@ PaigowHand.prototype = {
               setWithPair = true
             }
           }
-          sHigh = straights.slice(-1)[0]
+          const straightsReverse = [...straights].reverse()
+          const straightNoJoker = straightsReverse.find(s => s.every(c => !c.isJoker()))
+          sHigh = straightNoJoker || straights.slice(-1)[0]
           if (sHigh[4].isJoker() && sHigh[0].value !== 'Ace') {
             sHigh = [sHigh[4], ...sHigh.slice(0, 4)]
           } else if (sHigh[0].isJoker() && sHigh[4].value === 2) {
