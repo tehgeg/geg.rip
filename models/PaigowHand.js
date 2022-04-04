@@ -250,11 +250,15 @@ PaigowHand.identifyHand = (hand) => {
   }
 }
 
-// PaigowHand.isFoulHand = (low = [], high = []) => {
-//   if (low.length !== 2 || high.length !== 5) {
-//     return true
-//   }
-// }
+PaigowHand.isFoulHand = (low = [], high = []) => {
+  if (low.length !== 2 || high.length !== 5) {
+    return true
+  }
+
+  const { lowValue } = PaigowHand.lowValueAndRank(low)
+  const { highValue } = PaigowHand.highValueAndRank(high)
+
+}
 
 PaigowHand.lowValueAndRank = (lowHand) => {
   const result = { lowValue: null, lowRank: '' }
@@ -274,10 +278,46 @@ PaigowHand.lowValueAndRank = (lowHand) => {
 PaigowHand.highValueAndRank = (highHand) => {
   const result = { highValue: null, highRank: '' }
   if (!highHand.length) { return result }
+
   const {
     paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes
   } = PaigowHand.identifyHand(highHand)
-  // paigow, fiveAces, straightFlush, quads, boat, flush, straight, set, 2 pair, pair
+
+  if (fiveAces) {
+    result.highValue = 9
+    result.highRank = 'Five Aces'
+  } else if (straightFlushes.length) {
+    const [first, last] = identifyStraightValue(straightFlushes[0])
+    result.highValue = 8
+    result.highRank = `Straight Flush, ${first} to ${last}`
+  } else if (quads) {
+    result.highValue = 7
+    result.highRank = `Quad ${quads[0][3].value}s`
+  } else if (trips.length && pairs.length) {
+    result.highValue = 6
+    result.highRank = `Full House, ${trips[0][2].value}s over ${pairs[0][1]}s`
+  } else if (flush.length) {
+    result.highValue = 5
+    result.highRank = `Flush, ${flush[0].isJoker() ? 'Ace' : flush[0].value} High`
+  } else if (straights.length) {
+    const [first, last] = identifyStraightValue(straights[0])
+    result.highValue = 4
+    result.highRank = `Straight, ${first} to ${last}`
+  } else if (trips.length) {
+    result.highValue = 3
+    result.highRank = `Set of ${trips[0][2].value}s`
+  } else if (pairs.length === 2) {
+    result.highValue = 2
+    result.highRank = `Two Pair, ${pairs[0][1].value}s and ${pairs[1][1].value}s`
+  } else if (pairs.length === 1) {
+    result.highValue = 1
+    result.highRank = `Pair of ${pairs[0][1].value}s`
+  } else if (paigow) {
+    result.highValue = 0
+    result.highRank = `${paigow === 'Joker' ? 'Ace' : paigow} High Paigow`
+  }
+
+  return result
 }
 
 PaigowHand.prototype = {
