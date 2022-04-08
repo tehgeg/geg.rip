@@ -250,16 +250,6 @@ PaigowHand.identifyHand = (hand) => {
   }
 }
 
-PaigowHand.isFoulHand = (low = [], high = []) => {
-  if (low.length !== 2 || high.length !== 5) {
-    return true
-  }
-
-  const { lowValue } = PaigowHand.lowValueAndRank(low)
-  const { highValue } = PaigowHand.highValueAndRank(high)
-
-}
-
 PaigowHand.lowValueAndRank = (lowHand) => {
   const result = { lowValue: null, lowRank: '' }
   if (!lowHand.length) { return result }
@@ -276,12 +266,14 @@ PaigowHand.lowValueAndRank = (lowHand) => {
 }
 
 PaigowHand.highValueAndRank = (highHand) => {
-  const result = { highValue: null, highRank: '' }
+  const result = { highValue: null, highRank: '', result: {} }
   if (!highHand.length) { return result }
 
   const {
     paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes
   } = PaigowHand.identifyHand(highHand)
+
+  result.result = { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes }
 
   if (fiveAces) {
     result.highValue = 9
@@ -318,6 +310,188 @@ PaigowHand.highValueAndRank = (highHand) => {
   }
 
   return result
+}
+
+PaigowHand.isFoulHand = (low = [], high = []) => {
+  if (low.length !== 2 || high.length !== 5) { return true }
+
+  const { lowValue } = PaigowHand.lowValueAndRank(low)
+  const { highValue, result: highResult } = PaigowHand.highValueAndRank(high)
+
+  if (lowValue > highValue) { return true }
+  if (highValue > lowValue) { return false }
+
+  PaigowHand.sortCards(low)
+  if (lowValue === 1) {
+    const lowPair = low[1].numericValue()
+    const highPair = highResult.pairs[0][1].numericValue()
+    return lowPair > highPair
+  }
+
+  for (let i = 0; i < 2; i++) {
+    const lowCardValue = low[i].isJoker() ? 14 : low[i].numericValue()
+    const highCardValue = high[i].isJoker() ? 14 : high[i].numericValue()
+    if (highCardValue > lowCardValue) { return false }
+    if (lowCardValue > highCardValue) { return true }
+  }
+
+  return false
+}
+
+PaigowHand.compareLowHand = (playerHand, dealerHand) => {
+  const { lowValue: playerValue } = PaigowHand.lowValueAndRank(playerHand)
+  const { lowValue: dealerValue } = PaigowHand.lowValueAndRank(dealerHand)
+
+  if (playerValue > dealerValue) { return 'PLAYER' }
+  if (dealerValue > playerValue) { return 'DEALER' }
+
+  PaigowHand.sortCards(low)
+  if (playerValue === 1) {
+    const playerPair = playerHand[1].numericValue()
+    const dealerPair = dealerHand[1].numericValue()
+    return playerPair > dealerPair ? 'PLAYER' : 'DEALER'
+  }
+
+  for (let i = 0; i < 2; i++) {
+    const playerCard = playerHand[i].isJoker() ? 14 : playerHand[i].numericValue()
+    const dealerCard = dealerHand[i].isJoker() ? 14 : dealerHand[i].numericValue()
+    if (playerCard > dealerCard) { return 'PLAYER' }
+    if (dealerCard > playerCard) { return 'DEALER' }
+  }
+
+  return 'DEALER'
+}
+
+PaigowHand.compareHighHand = (playerHand, dealerHand) => {
+  const { playerValue, result: playerResult } = PaigowHand.identifyHand(playerHand)
+  const { dealerValue, result: dealerResult } = PaigowHand.identifyHand(dealerHand)
+
+  if (playerValue > dealerValue) { return 'PLAYER' }
+  if (dealerValue > playerValue) { return 'DEALER' }
+
+  const betterStraight = (straight1, straight2) => {
+    let straight1Value = straight1[4].numericValue()
+    let straight2Value = straight2[4].numericValue()
+
+    if (straight1Value === 15) {
+      straight1Value = straight1[3].numericValue() === 2 ? 9.5 : straight1[3].numericValue() - 1
+    }
+    if (straight2Value === 15) {
+      straight2Value = straight2[3].numericValue() === 2 ? 9.5 : straight2[3].numericValue() - 1
+    }
+
+    if (straight1Value > straight2Value) { return 1 }
+    if (straight2Value > straight1Value) { return -1 }
+    return 0
+  }
+
+  /* Tiebreakers */
+  // Straight Flush
+  if (playerValue === 8) {
+    return betterStraight(playerResult.straightFlushes[0], dealerResult.straightFlushes[0]) === 1 ? 'PLAYER' : 'DEALER'
+  }
+
+  // Quads
+  if (playerValue === 7) {
+    const playerQuads = playerResult.quads[0][3].numericValue()
+    const dealerQuads = dealerResult.quads[0][3].numericValue()
+    return playerQuads > dealerQuads ? 'PLAYER' : 'DEALER'
+  }
+
+  // Full House
+  if (playerValue === 6) {
+    const playerSet = playerResult.trips[0][2].numericValue()
+    const dealerSet = dealerResult.trips[0][2].numericValue()
+    return playerSet > dealerSet ? 'PLAYER' : 'DEALER'
+  }
+
+  // Flush
+  if (playerValue === 5) {
+    for (let i = 0; i < 5; i++) {
+      const playerCard = playerResult.flush[i].isJoker() ? 14 : playerResult.flush[i].numericValue()
+      const dealerCard = dealerResult.flush[i].isJoker() ? 14 : dealerResult.flush[i].numericValue()
+      if (playerCard > dealerCard) { return 'PLAYER' }
+      if (dealerCard > playerCard) { return 'DEALER' }
+    }
+    return 'DEALER'
+  }
+
+  // Straight
+  if (playerValue === 4) {
+    return betterStraight(playerResult.straights[0], dealerResult.straights[0]) === 1 ? 'PLAYER' : 'DEALER'
+  }
+
+  // Set
+  if (playerValue === 3) {
+    const playerSet = playerResult.trips[0][2].numericValue()
+    const dealerSet = dealerResult.trips[0][2].numericValue()
+    return playerSet > dealerSet ? 'PLAYER' : 'DEALER'
+  }
+
+  // Two Pair
+  if (playerValue === 2) {
+    const playerFirstPair = playerResult.pairs[0][1].numericValue()
+    const playerSecondPair = playerResult.pairs[1][1].numericValue()
+    const playerRemainingCards = playerHand.filter(c => {
+      const cVal = c.isJoker() ? 14 : c.numericValue()
+      return cVal !== playerFirstPair && cVal !== playerSecondPair
+    })
+    const dealerFirstPair = dealerResult.pairs[0][1].numericValue()
+    const dealerSecondPair = dealerResult.pairs[1][1].numericValue()
+    const dealerRemainingCards = dealerHand.filter(c => {
+      const cVal = c.isJoker() ? 14 : c.numericValue()
+      return cVal !== dealerFirstPair && cVal !== dealerSecondPair
+    })
+
+    if (playerFirstPair !== dealerFirstPair) {
+      return playerFirstPair > dealerFirstPair ? 'PLAYER' : 'DEALER'
+    }
+
+    if (playerSecondPair !== dealerSecondPair) {
+      return playerSecondPair > dealerSecondPair ? 'PLAYER' : 'DEALER'
+    }
+
+    const playerLastCard = playerRemainingCards[0].isJoker() ? 14 : playerRemainingCards[0].numericValue()
+    const dealerLastCard = dealerRemainingCards[0].isJoker() ? 14 : dealerRemainingCards[0].numericValue()
+    return playerLastCard > dealerLastCard ? 'PLAYER' : 'DEALER'
+  }
+
+  // Pair
+  if (playerValue === 1) {
+    const playerPair = playerResult.pairs[0][1].numericValue()
+    const playerRemainingCards = playerHand.filter(c => {
+      const cVal = c.isJoker() ? 14 : c.numericValue()
+      return cVal !== playerPair
+    })
+    PaigowHand.sort(playerRemainingCards)
+    const dealerPair = dealerResult.pairs[0][1].numericValue()
+    const dealerRemainingCards = dealerHand.filter(c => {
+      const cVal = c.isJoker() ? 14 : c.numericValue()
+      return cVal !== dealerPair
+    })
+    PaigowHand.sort(dealerRemainingCards)
+
+    if (playerPair !== dealerPair) {
+      return playerPair > dealerPair ? 'PLAYER' : 'DEALER'
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const playerCard = playerRemainingCards[i].isJoker() ? 14 : playerRemainingCards[i].numericValue()
+      const dealerCard = dealerRemainingCards[i].isJoker() ? 14 : dealerRemainingCards[i].numericValue()
+      if (playerCard > dealerCard) { return 'PLAYER' }
+      if (dealerCard > playerCard) { return 'DEALER' }
+    }
+    return 'DEALER'
+  }
+
+  // Paigow
+  for (let i = 0; i < 5; i++) {
+    const playerCard = playerHand[i].isJoker() ? 14 : playerHand[i].numericValue()
+    const dealerCard = dealerHand[i].isJoker() ? 14 : dealerHand[i].numericValue()
+    if (playerCard > dealerCard) { return 'PLAYER' }
+    if (dealerCard > playerCard) { return 'DEALER' }
+  }
+  return 'DEALER'
 }
 
 PaigowHand.prototype = {
