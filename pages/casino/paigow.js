@@ -5,6 +5,20 @@ import PaigowHand from '../../models/PaigowHand'
 import styles from './paigow.module.scss'
 import { useState, useRef } from 'react'
 
+const dealerDeck = new Deck(1)
+dealerDeck.shuffle()
+const dealerHand = new PaigowHand(dealerDeck.deal(7))
+dealerHand.setHouseWay()
+
+const faceUpHands = []
+for (let i = 0; i < 5; i++) {
+  const deck = new Deck(1)
+  deck.shuffle()
+  const hand = new PaigowHand(deck.deal(7))
+  hand.setFaceUp(dealerHand)
+  faceUpHands.push(hand)
+}
+
 const hands = []
 for (let i = 0; i < 10; i++) {
   const deck = new Deck(1)
@@ -83,6 +97,21 @@ const Paigow = () => {
           <button type="button" onClick={() => setFeltColor(felt.current)}>Set Felt</button>
         </div>
       </div>
+      <h2>Dealer Hand</h2>
+      <div className={styles.hand_container}>
+          <Hand hand={dealerHand} deck={deckTheme} />
+          <div className={styles.arrow}>{'->'}</div>
+          <Hand hand={dealerHand} deck={deckTheme} set />
+        </div>
+      {faceUpHands.map((hand, i) => (
+        <div className={styles.hand_container} key={i}>
+          <div className={styles.hand_index}>{i + 1}</div>
+          <Hand hand={hand} deck={deckTheme} />
+          <div className={styles.arrow}>{'->'}</div>
+          <Hand hand={hand} deck={deckTheme} set />
+        </div>
+      ))}
+      --------------------------------------------------------------------------
       {hands.map((hand, i) => (
         <div className={styles.hand_container} key={i}>
           <div className={styles.hand_index}>{i + 1}</div>

@@ -282,7 +282,7 @@ PaigowHand.highValueAndRank = (highHand) => {
     const [first, last] = identifyStraightValue(straightFlushes[0])
     result.highValue = 8
     result.highRank = `Straight Flush, ${first} to ${last}`
-  } else if (quads) {
+  } else if (quads.length) {
     result.highValue = 7
     result.highRank = `Quad ${quads[0][3].value}s`
   } else if (trips.length && pairs.length) {
@@ -345,7 +345,8 @@ PaigowHand.compareLowHand = (playerHand, dealerHand) => {
   if (playerValue > dealerValue) { return 'PLAYER' }
   if (dealerValue > playerValue) { return 'DEALER' }
 
-  PaigowHand.sortCards(low)
+  PaigowHand.sortCards(playerHand)
+  PaigowHand.sortCards(dealerHand)
   if (playerValue === 1) {
     const playerPair = playerHand[1].numericValue()
     const dealerPair = dealerHand[1].numericValue()
@@ -925,7 +926,7 @@ PaigowHand.prototype = {
       return
     }
   },
-  setFaceUpOptimal: function (dealerHand) {
+  setFaceUp: function (dealerHand) {
     dealerHand.setHouseWay()
     let candidateHands = []
     for (let i = 0; i < 7; i++) {
@@ -953,6 +954,7 @@ PaigowHand.prototype = {
         losingHands.push(hand)
       }
     })
+    console.log(winningHands, pushingHands, losingHands)
 
     let finalHand = { low: [], high: [] }
     if (winningHands.length) {
