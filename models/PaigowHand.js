@@ -925,7 +925,54 @@ PaigowHand.prototype = {
       return
     }
   },
-  setFaceUpOptimal: function (dealerHand) { },
+  setFaceUpOptimal: function (dealerHand) {
+    dealerHand.setHouseWay()
+    let candidateHands = []
+    for (let i = 0; i < 7; i++) {
+      for (let j = i + 1; j < 7; j++) {
+        const low = [this.hand[i], this.hand[j]]
+        const high = this.hand.filter((c, idx) => (idx !== i && idx !== j))
+        PaigowHand.sortCards(low)
+        PaigowHand.sortCards(high)
+        candidateHands.push({ low, high })
+      }
+    }
+
+    candidateHands = candidateHands.filter(hand => !PaigowHand.isFoulHand(hand.low, hand.high))
+    const winningHands = []
+    const pushingHands = []
+    const losingHands = []
+    candidateHands.forEach(hand => {
+      const lowResult = PaigowHand.compareLowHand(hand.low, dealerHand.low)
+      const highResult = PaigowHand.compareHighHand(hand.high, dealerHand.high)
+      if (lowResult === 'PLAYER' && highResult === 'PLAYER') {
+        winningHands.push(hand)
+      } else if (lowResult != highResult) {
+        pushingHands.push(hand)
+      } else {
+        losingHands.push(hand)
+      }
+    })
+
+    let finalHand = { low: [], high: [] }
+    if (winningHands.length) {
+      finalHand = winningHands[0]
+    } else if (pushingHands.length) {
+      finalHand = pushingHands[0]
+    } else {
+      finalHand = losingHands[0]
+    }
+
+    const { lowValue, lowRank } = PaigowHand.lowValueAndRank(finalHand.low)
+    const { highValue, highRank, result } = PaigowHand.highValueAndRank(finalHand.high)
+    this.low = finalHand.low
+    this.lowValue = lowValue
+    this.lowRank = lowRank
+    this.high = finalHand.high
+    this.highValue = highValue
+    this.highRank = highRank
+    this.aceHigh = result.paigow === 'Joker' || result.paigow === 'Ace'
+  },
   fortuneBonus: {
     'Straight': 2,
     '3 of a Kind': 3,
