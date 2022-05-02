@@ -306,7 +306,7 @@ PaigowHand.highValueAndRank = (highHand) => {
     result.highRank = `Pair of ${pairs[0][1].value}s`
   } else if (paigow) {
     result.highValue = 0
-    result.highRank = `${paigow === 'Joker' ? 'Ace' : paigow} High Paigow`
+    result.highRank = `${paigow === 'Joker' ? 'Ace' : paigow} High`
   }
 
   return result
@@ -364,8 +364,8 @@ PaigowHand.compareLowHand = (playerHand, dealerHand) => {
 }
 
 PaigowHand.compareHighHand = (playerHand, dealerHand) => {
-  const { playerValue, result: playerResult } = PaigowHand.identifyHand(playerHand)
-  const { dealerValue, result: dealerResult } = PaigowHand.identifyHand(dealerHand)
+  const { highValue: playerValue, result: playerResult } = PaigowHand.highValueAndRank(playerHand)
+  const { highValue: dealerValue, result: dealerResult } = PaigowHand.highValueAndRank(dealerHand)
 
   if (playerValue > dealerValue) { return 'PLAYER' }
   if (dealerValue > playerValue) { return 'DEALER' }
@@ -464,13 +464,13 @@ PaigowHand.compareHighHand = (playerHand, dealerHand) => {
       const cVal = c.isJoker() ? 14 : c.numericValue()
       return cVal !== playerPair
     })
-    PaigowHand.sort(playerRemainingCards)
+    PaigowHand.sortCards(playerRemainingCards)
     const dealerPair = dealerResult.pairs[0][1].numericValue()
     const dealerRemainingCards = dealerHand.filter(c => {
       const cVal = c.isJoker() ? 14 : c.numericValue()
       return cVal !== dealerPair
     })
-    PaigowHand.sort(dealerRemainingCards)
+    PaigowHand.sortCards(dealerRemainingCards)
 
     if (playerPair !== dealerPair) {
       return playerPair > dealerPair ? 'PLAYER' : 'DEALER'
@@ -544,7 +544,7 @@ PaigowHand.prototype = {
       this.lowValue = lowValue
       this.lowRank = lowRank
       this.highValue = 0
-      this.highRank = `${this.high[0].isJoker() ? 'Ace' : this.high[0].value} High Paigow`
+      this.highRank = `${this.high[0].isJoker() ? 'Ace' : this.high[0].value} High`
       return
     }
 
@@ -954,7 +954,6 @@ PaigowHand.prototype = {
         losingHands.push(hand)
       }
     })
-    console.log(winningHands, pushingHands, losingHands)
 
     let finalHand = { low: [], high: [] }
     if (winningHands.length) {
