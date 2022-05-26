@@ -250,112 +250,24 @@ PaigowHand.identifyHand = (hand) => {
   }
 }
 
-PaigowHand.lowValueAndRank = (lowHand) => {
-  const result = { lowValue: null, lowRank: '' }
-  if (!lowHand.length) { return result }
-  if (lowHand[0].value === lowHand[1].value || lowHand[0].value === 'Joker' && lowHand[1].value === 'Ace') {
-    result.lowValue = 1
-    result.lowRank = `Pair of ${lowHand[1].value}s`
-  } else {
-    result.lowValue = 0
-    const firstValue = lowHand[0].isJoker() ? 'Ace' : lowHand[0].value
-    result.lowRank = `${firstValue}, ${lowHand[1].value}`
-  }
-
-  return result
-}
-
-PaigowHand.highValueAndRank = (highHand) => {
-  const result = { highValue: null, highRank: '', result: {} }
-  if (!highHand.length) { return result }
-
-  const {
-    paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes
-  } = PaigowHand.identifyHand(highHand)
-
-  result.result = { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes }
-
-  if (fiveAces) {
-    result.highValue = 9
-    result.highRank = 'Five Aces'
-  } else if (straightFlushes.length) {
-    const [first, last] = identifyStraightValue(straightFlushes[0])
-    result.highValue = 8
-    result.highRank = `Straight Flush, ${first} to ${last}`
-  } else if (quads.length) {
-    result.highValue = 7
-    result.highRank = `Quad ${quads[0][3].value}s`
-  } else if (trips.length && pairs.length) {
-    result.highValue = 6
-    result.highRank = `Full House, ${trips[0][2].value}s over ${pairs[0][1]}s`
-  } else if (flush.length) {
-    result.highValue = 5
-    result.highRank = `Flush, ${flush[0].isJoker() ? 'Ace' : flush[0].value} High`
-  } else if (straights.length) {
-    const [first, last] = identifyStraightValue(straights[0])
-    result.highValue = 4
-    result.highRank = `Straight, ${first} to ${last}`
-  } else if (trips.length) {
-    result.highValue = 3
-    result.highRank = `Set of ${trips[0][2].value}s`
-  } else if (pairs.length === 2) {
-    result.highValue = 2
-    result.highRank = `Two Pair, ${pairs[0][1].value}s and ${pairs[1][1].value}s`
-  } else if (pairs.length === 1) {
-    result.highValue = 1
-    result.highRank = `Pair of ${pairs[0][1].value}s`
-  } else if (paigow) {
-    result.highValue = 0
-    result.highRank = `${paigow === 'Joker' ? 'Ace' : paigow} High`
-  }
-
-  return result
-}
-
-PaigowHand.isFoulHand = (low = [], high = []) => {
-  if (low.length !== 2 || high.length !== 5) { return true }
-
-  const { lowValue } = PaigowHand.lowValueAndRank(low)
-  const { highValue, result: highResult } = PaigowHand.highValueAndRank(high)
-
-  if (lowValue > highValue) { return true }
-  if (highValue > lowValue) { return false }
-
-  PaigowHand.sortCards(low)
-  if (lowValue === 1) {
-    const lowPair = low[1].numericValue()
-    const highPair = highResult.pairs[0][1].numericValue()
-    return lowPair > highPair
-  }
-
-  for (let i = 0; i < 2; i++) {
-    const lowCardValue = low[i].isJoker() ? 14 : low[i].numericValue()
-    const highCardValue = high[i].isJoker() ? 14 : high[i].numericValue()
-    if (highCardValue > lowCardValue) { return false }
-    if (lowCardValue > highCardValue) { return true }
-  }
-
-  return false
-}
-
 PaigowHand.compareLowHand = (playerHand, dealerHand) => {
-  const { lowValue: playerValue } = PaigowHand.lowValueAndRank(playerHand)
-  const { lowValue: dealerValue } = PaigowHand.lowValueAndRank(dealerHand)
+  const { lowValue: playerValue } = playerHand.lowValueAndRank()
+  const { lowValue: dealerValue } = dealerHand.lowValueAndRank()
 
   if (playerValue > dealerValue) { return 'PLAYER' }
   if (dealerValue > playerValue) { return 'DEALER' }
 
-  PaigowHand.sortCards(playerHand)
-  PaigowHand.sortCards(dealerHand)
+  PaigowHand.sortCards(playerHand.low)
+  PaigowHand.sortCards(dealerHand.low)
   if (playerValue === 1) {
-    const playerPair = playerHand[1].numericValue()
-    const dealerPair = dealerHand[1].numericValue()
+    const playerPair = playerHand.low[1].numericValue()
+    const dealerPair = dealerHand.low[1].numericValue()
     return playerPair > dealerPair ? 'PLAYER' : 'DEALER'
   }
 
   for (let i = 0; i < 2; i++) {
-    const playerCard = playerHand[i].isJoker() ? 14 : playerHand[i].numericValue()
-    const dealerCard = dealerHand[i].isJoker() ? 14 : dealerHand[i].numericValue()
+    const playerCard = playerHand.low[i].isJoker() ? 14 : playerHand.low[i].numericValue()
+    const dealerCard = dealerHand.low[i].isJoker() ? 14 : dealerHand.low[i].numericValue()
     if (playerCard > dealerCard) { return 'PLAYER' }
     if (dealerCard > playerCard) { return 'DEALER' }
   }
@@ -364,8 +276,8 @@ PaigowHand.compareLowHand = (playerHand, dealerHand) => {
 }
 
 PaigowHand.compareHighHand = (playerHand, dealerHand) => {
-  const { highValue: playerValue, result: playerResult } = PaigowHand.highValueAndRank(playerHand)
-  const { highValue: dealerValue, result: dealerResult } = PaigowHand.highValueAndRank(dealerHand)
+  const { highValue: playerValue, result: playerResult } = playerHand.highValueAndRank()
+  const { highValue: dealerValue, result: dealerResult } = dealerHand.highValueAndRank(true)
 
   if (playerValue > dealerValue) { return 'PLAYER' }
   if (dealerValue > playerValue) { return 'DEALER' }
@@ -433,13 +345,13 @@ PaigowHand.compareHighHand = (playerHand, dealerHand) => {
   if (playerValue === 2) {
     const playerFirstPair = playerResult.pairs[0][1].numericValue()
     const playerSecondPair = playerResult.pairs[1][1].numericValue()
-    const playerRemainingCards = playerHand.filter(c => {
+    const playerRemainingCards = playerHand.high.filter(c => {
       const cVal = c.isJoker() ? 14 : c.numericValue()
       return cVal !== playerFirstPair && cVal !== playerSecondPair
     })
     const dealerFirstPair = dealerResult.pairs[0][1].numericValue()
     const dealerSecondPair = dealerResult.pairs[1][1].numericValue()
-    const dealerRemainingCards = dealerHand.filter(c => {
+    const dealerRemainingCards = dealerHand.high.filter(c => {
       const cVal = c.isJoker() ? 14 : c.numericValue()
       return cVal !== dealerFirstPair && cVal !== dealerSecondPair
     })
@@ -460,13 +372,13 @@ PaigowHand.compareHighHand = (playerHand, dealerHand) => {
   // Pair
   if (playerValue === 1) {
     const playerPair = playerResult.pairs[0][1].numericValue()
-    const playerRemainingCards = playerHand.filter(c => {
+    const playerRemainingCards = playerHand.high.filter(c => {
       const cVal = c.isJoker() ? 14 : c.numericValue()
       return cVal !== playerPair
     })
     PaigowHand.sortCards(playerRemainingCards)
     const dealerPair = dealerResult.pairs[0][1].numericValue()
-    const dealerRemainingCards = dealerHand.filter(c => {
+    const dealerRemainingCards = dealerHand.high.filter(c => {
       const cVal = c.isJoker() ? 14 : c.numericValue()
       return cVal !== dealerPair
     })
@@ -487,8 +399,8 @@ PaigowHand.compareHighHand = (playerHand, dealerHand) => {
 
   // Paigow
   for (let i = 0; i < 5; i++) {
-    const playerCard = playerHand[i].isJoker() ? 14 : playerHand[i].numericValue()
-    const dealerCard = dealerHand[i].isJoker() ? 14 : dealerHand[i].numericValue()
+    const playerCard = playerHand.high[i].isJoker() ? 14 : playerHand.high[i].numericValue()
+    const dealerCard = dealerHand.high[i].isJoker() ? 14 : dealerHand.high[i].numericValue()
     if (playerCard > dealerCard) { return 'PLAYER' }
     if (dealerCard > playerCard) { return 'DEALER' }
   }
@@ -528,6 +440,164 @@ PaigowHand.prototype = {
       return list
     }, [])
   },
+  isFoulHand: function () {
+    if (this.low.length !== 2 || this.high.length !== 5) { return true }
+
+    const { lowValue } = this.lowValueAndRank()
+    const { highValue, result: highResult } = this.highValueAndRank()
+
+    if (lowValue > highValue) { return true }
+    if (highValue > lowValue) { return false }
+
+    PaigowHand.sortCards(this.low)
+    if (lowValue === 1) {
+      const lowPair = this.low[1].numericValue()
+      const highPair = highResult.pairs[0][1].numericValue()
+      return lowPair > highPair
+    }
+
+    for (let i = 0; i < 2; i++) {
+      const lowCardValue = this.low[i].isJoker() ? 14 : this.low[i].numericValue()
+      const highCardValue = this.high[i].isJoker() ? 14 : this.high[i].numericValue()
+      if (highCardValue > lowCardValue) { return false }
+      if (lowCardValue > highCardValue) { return true }
+    }
+
+    return false
+  },
+  lowValueAndRank: function () {
+    const lowHand = this.low
+    const result = { lowValue: null, lowRank: '' }
+    if (!lowHand.length) { return result }
+    if (lowHand[0].value === lowHand[1].value || lowHand[0].value === 'Joker' && lowHand[1].value === 'Ace') {
+      result.lowValue = 1
+      result.lowRank = `Pair of ${lowHand[1].value}s`
+    } else {
+      result.lowValue = 0
+      const firstValue = lowHand[0].isJoker() ? 'Ace' : lowHand[0].value
+      result.lowRank = `${firstValue}, ${lowHand[1].value}`
+    }
+
+    return result
+  },
+  highValueAndRank: function (preserveOrder = false) {
+    const highHand = this.high
+    const highHandPreserved = [...this.high]
+    const result = { highValue: null, highRank: '', result: {} }
+    if (!highHand.length) { return result }
+
+    const {
+      paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes
+    } = PaigowHand.identifyHand(highHand)
+
+    result.result = { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes }
+
+    if (fiveAces) {
+      result.highValue = 9
+      result.highRank = 'Five Aces'
+    } else if (straightFlushes.length) {
+      const [first, last] = identifyStraightValue(straightFlushes[0])
+      result.highValue = 8
+      result.highRank = `Straight Flush, ${first} to ${last}`
+    } else if (quads.length) {
+      result.highValue = 7
+      result.highRank = `Quad ${quads[0][3].value}s`
+    } else if (trips.length && pairs.length) {
+      result.highValue = 6
+      result.highRank = `Full House, ${trips[0][2].value}s over ${pairs[0][1]}s`
+    } else if (flush.length) {
+      result.highValue = 5
+      result.highRank = `Flush, ${flush[0].isJoker() ? 'Ace' : flush[0].value} High`
+    } else if (straights.length) {
+      const [first, last] = identifyStraightValue(straights[0])
+      result.highValue = 4
+      result.highRank = `Straight, ${first} to ${last}`
+    } else if (trips.length) {
+      result.highValue = 3
+      result.highRank = `Set of ${trips[0][2].value}s`
+    } else if (pairs.length === 2) {
+      result.highValue = 2
+      result.highRank = `Two Pair, ${pairs[0][1].value}s and ${pairs[1][1].value}s`
+    } else if (pairs.length === 1) {
+      result.highValue = 1
+      result.highRank = `Pair of ${pairs[0][1].value}s`
+    } else if (paigow) {
+      result.highValue = 0
+      result.highRank = `${paigow === 'Joker' ? 'Ace' : paigow} High`
+    }
+
+    if (preserveOrder) { this.high = highHandPreserved }
+    return result
+  },
+  orderHighCards: function (value, result) {
+    const hand = this.high
+    PaigowHand.sortCards(hand)
+    switch (value) {
+      //straight flush or straight
+      case 8:
+      case 4:
+        if (hand[0].isJoker()) {
+          const joker = hand[0]
+          let currentVal = hand[1].numericValue()
+          for (let i = 2; i < hand.length; i++) {
+            if (hand[i].numericValue() !== currentVal - 1) {
+              this.high = [...hand.slice(1, i), joker, ...hand.slice(i)]
+              break
+            }
+          }
+        }
+        break
+      // quads
+      case 7:
+        const quads = result.quads[0]
+        const quadValues = [quads[3].numericValue()]
+        if (quadValues[0] === 14) {
+          quadValues.push(15)
+        }
+        const freeCardQuads = hand.find(c => !quadValues.includes(c.numericValue()))
+        this.high = [...quads, freeCardQuads]
+        break
+      // full house
+      case 6:
+        let boatTrips = result.trips[0]
+        let boatPair = result.pairs[0]
+        this.high = [...boatTrips, ...boatPair]
+        break
+      // set
+      case 3:
+        const trips = result.trips[0]
+        const tripValues = [trips[2].numericValue()]
+        if (tripValues[0] === 14) {
+          tripValues.push(15)
+        }
+        const freeCardsSet = hand.filter(c => !tripValues.includes(c.numericValue()))
+        this.high = [...trips, ...freeCardsSet]
+        break
+      // two pair
+      case 2:
+        const twoPair1 = result.pairs[0]
+        const twoPair2 = result.pairs[1]
+        const twoPairValues = [twoPair1[1].numericValue(), twoPair2[1].numericValue()]
+        if (twoPairValues[0] === 14) {
+          twoPairValues.push(15)
+        }
+        const freeCardTwoPair = hand.find(c => !twoPairValues.includes(c.numericValue()))
+        this.high = [...twoPair1, ...twoPair2, freeCardTwoPair]
+        break
+      // pair
+      case 1:
+        const pair = result.pairs[0]
+        const pairValues = [pair[1].numericValue()]
+        if (pairValues[0] === 14) {
+          pairValues.push(15)
+        }
+        const freeCardsPair = hand.filter(c => !pairValues.includes(c.numericValue()))
+        this.high = [...pair, ...freeCardsPair]
+        break
+      default:
+        break
+    }
+  },
   // ruleset -> https://wizardofodds.com/games/pai-gow-poker/house-way/trump-plaza-atlantic-city/
   setHouseWay: function () {
     const { paigow, pairs, trips, quads, fiveAces, straights, flush, straightFlushes } = PaigowHand.identifyHand(this.hand)
@@ -540,7 +610,7 @@ PaigowHand.prototype = {
       }
       this.low = [this.hand[1], this.hand[2]]
       this.high = [this.hand[0], ...this.hand.slice(3)]
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       this.highValue = 0
@@ -553,7 +623,7 @@ PaigowHand.prototype = {
       const pairOfKings = pairs.length && pairs[0][0].value == 'King'
       this.low = pairOfKings ? this.hand.slice(-2) : this.hand.slice(0, 2)
       this.high = pairOfKings ? this.hand.slice(0, 5) : this.hand.slice(2)
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       if (pairOfKings) {
@@ -620,7 +690,7 @@ PaigowHand.prototype = {
           this.highRank = `Pair of ${quads[0][1].value}s`
         }
       }
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       return
@@ -652,7 +722,7 @@ PaigowHand.prototype = {
           this.highRank = `Set of ${trips[0][2].value}s`
         }
       }
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       return
@@ -664,7 +734,7 @@ PaigowHand.prototype = {
       this.high = [...pairs[1], ...pairs[2], ...freeCards]
       this.highValue = 2
       this.highRank = `Two Pair, ${pairs[1][1].value}s and ${pairs[2][1].value}s`
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       return
@@ -721,7 +791,7 @@ PaigowHand.prototype = {
           }
         }
       }
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       return
@@ -748,7 +818,7 @@ PaigowHand.prototype = {
           this.highValue = 8
           const [first, last] = identifyStraightValue(high)
           this.highRank = `Straight Flush, ${first} to ${last}`
-          if (this.highRank = 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
+          if (this.highRank === 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
           low = this.hand.filter(c => !high.find(sfCard => Card.equals(sfCard, c)))
         } else if (hasFlush) {
           high = flush.slice(-5)
@@ -854,7 +924,7 @@ PaigowHand.prototype = {
             this.highValue = 8
             const [first, last] = identifyStraightValue(high)
             this.highRank = `Straight Flush, ${first} to ${last}`
-            if (this.highRank = 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
+            if (this.highRank === 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
           }
           if (hasFlush) {
             if (!low.length
@@ -881,7 +951,7 @@ PaigowHand.prototype = {
         this.low = low
         this.high = high
       }
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       return
@@ -908,7 +978,7 @@ PaigowHand.prototype = {
           this.highRank = `Set of ${trips[0][2].value}s`
         }
       }
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       return
@@ -918,7 +988,7 @@ PaigowHand.prototype = {
     if (pairs.length === 1) {
       this.low = freeCards.slice(0, 2)
       this.high = [...pairs[0], ...freeCards.slice(2)]
-      const { lowValue, lowRank } = PaigowHand.lowValueAndRank(this.low)
+      const { lowValue, lowRank } = this.lowValueAndRank()
       this.lowValue = lowValue
       this.lowRank = lowRank
       this.highValue = 1
@@ -931,31 +1001,48 @@ PaigowHand.prototype = {
     let candidateHands = []
     for (let i = 0; i < 7; i++) {
       for (let j = i + 1; j < 7; j++) {
-        const low = [this.hand[i], this.hand[j]]
-        const high = this.hand.filter((c, idx) => (idx !== i && idx !== j))
-        PaigowHand.sortCards(low)
-        PaigowHand.sortCards(high)
-        candidateHands.push({ low, high })
+        const candidateHand = new PaigowHand([this.hand[i], this.hand[j], ...this.hand.filter((c, idx) => (idx !== i && idx !== j))])
+        candidateHand.low = [this.hand[i], this.hand[j]]
+        candidateHand.high = this.hand.filter((c, idx) => (idx !== i && idx !== j))
+        PaigowHand.sortCards(candidateHand.low)
+        PaigowHand.sortCards(candidateHand.high)
+        candidateHands.push(candidateHand)
       }
     }
 
-    candidateHands = candidateHands.filter(hand => !PaigowHand.isFoulHand(hand.low, hand.high))
     const winningHands = []
     const pushingHands = []
     const losingHands = []
+    const houseWayHand = new PaigowHand(this.hand)
+    houseWayHand.setHouseWay()
+    const lowResult = PaigowHand.compareLowHand(houseWayHand, dealerHand)
+    const highResult = PaigowHand.compareHighHand(houseWayHand, dealerHand)
+    if (lowResult === 'PLAYER' && highResult === 'PLAYER') {
+      winningHands.push(houseWayHand)
+    } else if (lowResult != highResult) {
+      pushingHands.push(houseWayHand)
+    } else {
+      losingHands.push(houseWayHand)
+    }
+
+
+    candidateHands = candidateHands.filter(hand => !hand.isFoulHand())
     candidateHands.forEach(hand => {
-      const lowResult = PaigowHand.compareLowHand(hand.low, dealerHand.low)
-      const highResult = PaigowHand.compareHighHand(hand.high, dealerHand.high)
-      if (lowResult === 'PLAYER' && highResult === 'PLAYER') {
-        winningHands.push(hand)
-      } else if (lowResult != highResult) {
-        pushingHands.push(hand)
-      } else {
-        losingHands.push(hand)
+      if (!(Card.equals(hand.low[0], houseWayHand.low[0]) && Card.equals(hand.low[1], houseWayHand.low[1])) &&
+        !(Card.equals(hand.low[0], houseWayHand.low[1]) && Card.equals(hand.low[1], houseWayHand.low[0]))) {
+        const lowResult = PaigowHand.compareLowHand(hand, dealerHand)
+        const highResult = PaigowHand.compareHighHand(hand, dealerHand)
+        if (lowResult === 'PLAYER' && highResult === 'PLAYER') {
+          winningHands.push(hand)
+        } else if (lowResult != highResult) {
+          pushingHands.push(hand)
+        } else {
+          losingHands.push(hand)
+        }
       }
     })
 
-    let finalHand = { low: [], high: [] }
+    let finalHand = new PaigowHand()
     if (winningHands.length) {
       finalHand = winningHands[0]
     } else if (pushingHands.length) {
@@ -964,8 +1051,8 @@ PaigowHand.prototype = {
       finalHand = losingHands[0]
     }
 
-    const { lowValue, lowRank } = PaigowHand.lowValueAndRank(finalHand.low)
-    const { highValue, highRank, result } = PaigowHand.highValueAndRank(finalHand.high)
+    const { lowValue, lowRank } = finalHand.lowValueAndRank()
+    const { highValue, highRank, result } = finalHand.highValueAndRank()
     this.low = finalHand.low
     this.lowValue = lowValue
     this.lowRank = lowRank
@@ -973,6 +1060,10 @@ PaigowHand.prototype = {
     this.highValue = highValue
     this.highRank = highRank
     this.aceHigh = result.paigow === 'Joker' || result.paigow === 'Ace'
+
+    PaigowHand.sortCards(finalHand.low)
+    finalHand.orderHighCards(highValue, result)
+    return finalHand
   },
   fortuneBonus: {
     'Straight': 2,

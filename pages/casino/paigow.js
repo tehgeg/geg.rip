@@ -15,8 +15,8 @@ for (let i = 0; i < 5; i++) {
   const deck = new Deck(1)
   deck.shuffle()
   const hand = new PaigowHand(deck.deal(7))
-  hand.setFaceUp(dealerHand)
-  faceUpHands.push(hand)
+  const setHand = hand.setFaceUp(dealerHand)
+  faceUpHands.push(setHand)
 }
 
 const hands = []
