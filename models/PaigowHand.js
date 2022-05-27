@@ -504,6 +504,7 @@ PaigowHand.prototype = {
       const [first, last] = identifyStraightValue(straightFlushes[0])
       result.highValue = 8
       result.highRank = `Straight Flush, ${first} to ${last}`
+      if (this.highRank === 'Straight Flush, Ace to 10') { this.highRank = 'Royal Flush' }
     } else if (quads.length) {
       result.highValue = 7
       result.highRank = `Quad ${quads[0][3].value}s`
@@ -556,6 +557,7 @@ PaigowHand.prototype = {
               this.high = [...this.high.slice(1, i), joker, ...this.high.slice(i)]
               break
             }
+            currentVal--
           }
         }
         break
