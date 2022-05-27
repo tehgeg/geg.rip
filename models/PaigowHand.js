@@ -10,6 +10,7 @@ function PaigowHand(cards = []) {
   this.highValue = null
   this.highRank = null
   this.aceHigh = false
+  this.result = null
 }
 
 PaigowHand.sortCards = (cards) => (
@@ -288,9 +289,13 @@ PaigowHand.compareHighHand = (playerHand, dealerHand) => {
 
     if (straight1Value === 15) {
       straight1Value = straight1[3].numericValue() === 2 ? 9.5 : straight1[3].numericValue() - 1
+    } else if (straight1Value === 14) {
+      straight1Value = 9.5
     }
     if (straight2Value === 15) {
       straight2Value = straight2[3].numericValue() === 2 ? 9.5 : straight2[3].numericValue() - 1
+    } else if (straight2Value === 14) {
+      straight2Value = 9.5
     }
 
     if (straight1Value > straight2Value) { return 1 }
@@ -504,7 +509,7 @@ PaigowHand.prototype = {
       result.highRank = `Quad ${quads[0][3].value}s`
     } else if (trips.length && pairs.length) {
       result.highValue = 6
-      result.highRank = `Full House, ${trips[0][2].value}s over ${pairs[0][1]}s`
+      result.highRank = `Full House, ${trips[0][2].value}s over ${pairs[0][1].value}s`
     } else if (flush.length) {
       result.highValue = 5
       result.highRank = `Flush, ${flush[0].isJoker() ? 'Ace' : flush[0].value} High`
@@ -529,19 +534,26 @@ PaigowHand.prototype = {
     if (preserveOrder) { this.high = highHandPreserved }
     return result
   },
-  orderHighCards: function (value, result) {
-    const hand = this.high
-    PaigowHand.sortCards(hand)
+  orderHighCards: function (value, rank, result) {
+    PaigowHand.sortCards(this.high)
     switch (value) {
       //straight flush or straight
       case 8:
       case 4:
-        if (hand[0].isJoker()) {
-          const joker = hand[0]
-          let currentVal = hand[1].numericValue()
-          for (let i = 2; i < hand.length; i++) {
-            if (hand[i].numericValue() !== currentVal - 1) {
-              this.high = [...hand.slice(1, i), joker, ...hand.slice(i)]
+        if (rank === 'Straight, 5 to Ace') {
+          const aceIdx = this.high.findIndex(c => c.numericValue() === 14)
+          if (aceIdx === 0) {
+            this.high = [...this.high.slice(1), this.high[0]]
+          } else if (aceIdx !== 4) {
+            this.high = [...this.high.slice(0, aceIdx), ...this.high.slice(aceIdx + 1), this.high[aceIdx]]
+          }
+        }
+        if (this.high[0].isJoker()) {
+          const joker = this.high[0]
+          let currentVal = this.high[1].numericValue()
+          for (let i = 2; i < this.high.length; i++) {
+            if (this.high[i].numericValue() !== currentVal - 1) {
+              this.high = [...this.high.slice(1, i), joker, ...this.high.slice(i)]
               break
             }
           }
@@ -554,7 +566,7 @@ PaigowHand.prototype = {
         if (quadValues[0] === 14) {
           quadValues.push(15)
         }
-        const freeCardQuads = hand.find(c => !quadValues.includes(c.numericValue()))
+        const freeCardQuads = this.high.find(c => !quadValues.includes(c.numericValue()))
         this.high = [...quads, freeCardQuads]
         break
       // full house
@@ -570,7 +582,7 @@ PaigowHand.prototype = {
         if (tripValues[0] === 14) {
           tripValues.push(15)
         }
-        const freeCardsSet = hand.filter(c => !tripValues.includes(c.numericValue()))
+        const freeCardsSet = this.high.filter(c => !tripValues.includes(c.numericValue()))
         this.high = [...trips, ...freeCardsSet]
         break
       // two pair
@@ -581,7 +593,7 @@ PaigowHand.prototype = {
         if (twoPairValues[0] === 14) {
           twoPairValues.push(15)
         }
-        const freeCardTwoPair = hand.find(c => !twoPairValues.includes(c.numericValue()))
+        const freeCardTwoPair = this.high.find(c => !twoPairValues.includes(c.numericValue()))
         this.high = [...twoPair1, ...twoPair2, freeCardTwoPair]
         break
       // pair
@@ -591,7 +603,7 @@ PaigowHand.prototype = {
         if (pairValues[0] === 14) {
           pairValues.push(15)
         }
-        const freeCardsPair = hand.filter(c => !pairValues.includes(c.numericValue()))
+        const freeCardsPair = this.high.filter(c => !pairValues.includes(c.numericValue()))
         this.high = [...pair, ...freeCardsPair]
         break
       default:
@@ -1045,24 +1057,25 @@ PaigowHand.prototype = {
     let finalHand = new PaigowHand()
     if (winningHands.length) {
       finalHand = winningHands[0]
+      finalHand.result = 'WIN'
     } else if (pushingHands.length) {
       finalHand = pushingHands[0]
+      finalHand.result = 'PUSH'
     } else {
       finalHand = losingHands[0]
+      finalHand.result = 'LOSS'
     }
 
     const { lowValue, lowRank } = finalHand.lowValueAndRank()
     const { highValue, highRank, result } = finalHand.highValueAndRank()
-    this.low = finalHand.low
-    this.lowValue = lowValue
-    this.lowRank = lowRank
-    this.high = finalHand.high
-    this.highValue = highValue
-    this.highRank = highRank
-    this.aceHigh = result.paigow === 'Joker' || result.paigow === 'Ace'
+    finalHand.lowValue = lowValue
+    finalHand.lowRank = lowRank
+    finalHand.highValue = highValue
+    finalHand.highRank = highRank
+    finalHand.aceHigh = result.paigow === 'Joker' || result.paigow === 'Ace'
 
     PaigowHand.sortCards(finalHand.low)
-    finalHand.orderHighCards(highValue, result)
+    finalHand.orderHighCards(highValue, highRank, result)
     return finalHand
   },
   fortuneBonus: {

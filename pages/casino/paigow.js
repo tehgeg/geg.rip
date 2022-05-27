@@ -109,6 +109,7 @@ const Paigow = () => {
           <Hand hand={hand} deck={deckTheme} />
           <div className={styles.arrow}>{'->'}</div>
           <Hand hand={hand} deck={deckTheme} set />
+          <div style={{fontWeight: 'bold'}}>{hand.result}</div>
         </div>
       ))}
       --------------------------------------------------------------------------
